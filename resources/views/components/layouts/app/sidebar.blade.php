@@ -13,6 +13,10 @@
 
             <flux:navlist variant="outline">
                 <flux:navlist.group :heading="__('Platform')" class="grid">
+                    @foreach (Config::get('languages') as $lang => $language)
+                        <a href="{{ route('lang', $lang) }}">{{ $language }} </a>
+                    @endforeach
+                    <flux:navlist.item icon="folder" :href="route('lang',['lang' => 'es'])" :current="request()->routeIs('lang')" wire:navigate>{{ __('Change Language') }}</flux:navlist.item>
                     <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
                 </flux:navlist.group>
             </flux:navlist>
