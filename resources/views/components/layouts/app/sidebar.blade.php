@@ -12,11 +12,19 @@
             </a>
 
             <flux:navlist variant="outline">
-                <flux:navlist.group :heading="__('Platform')" class="grid">
+                <flux:navlist.group :heading="__('Change Language')" class="grid">
                     @foreach (Config::get('languages') as $lang => $language)
-                        <a href="{{ route('lang', $lang) }}">{{ $language }} </a>
+                        <a href="{{ route('lang', $lang) }}" class="px-2 py-1 my-1 mr-1 rounded bg-gray-300 text-white hover:bg-gray-400 transition text-sm">{{ $language }} </a>
                     @endforeach
-                    <flux:navlist.item icon="folder" :href="route('lang',['lang' => 'es'])" :current="request()->routeIs('lang')" wire:navigate>{{ __('Change Language') }}</flux:navlist.item>
+                </flux:navlist.group>
+
+
+            </flux:navlist>
+
+            <flux:navlist variant="outline">
+
+
+                 <flux:navlist.group :heading="__('Platform')" class="grid">
                     <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
                 </flux:navlist.group>
             </flux:navlist>
