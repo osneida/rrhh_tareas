@@ -29,6 +29,16 @@
                 </flux:navlist.group>
             </flux:navlist>
 
+
+            <flux:navlist variant="outline">
+
+
+                 <flux:navlist.group :heading="__('Admin')" class="grid">
+                    <flux:navlist.item icon="home" :href="route('tareas.index')" :current="request()->routeIs('tareas.index')" wire:navigate>{{ __('Tasks') }}</flux:navlist.item>
+                </flux:navlist.group>
+            </flux:navlist>
+
+
             <flux:spacer />
 
             <flux:navlist variant="outline">

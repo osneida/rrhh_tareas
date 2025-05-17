@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\Cliente;
 use App\Models\User;
 
-class Tarea extends Model
+class Tarea extends  Api #Model
 {
     protected $fillable = [
         'tarea',
@@ -28,4 +28,5 @@ class Tarea extends Model
     {
         return $this->belongsTo(Cliente::class);
     }
+
 }
