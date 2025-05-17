@@ -58,13 +58,13 @@ class TareaLivewire extends Component
             $query->where('cliente_id', $this->filtroCliente);
         }
 
-      //  $isAdmin = $this->isAdmin;
+        //  $isAdmin = $this->isAdmin;
         // ORDENAMIENTO
         $query->orderBy($this->ordenCampo, $this->ordenDireccion);
         $tareas_pag = $query->paginate(10);
         $empleados = User::all();
         $clientes = Cliente::all();
-        return view('livewire.tarea-livewire', compact('tareas_pag','empleados', 'clientes', 'isAdmin'));
+        return view('livewire.tarea-livewire', compact('tareas_pag', 'empleados', 'clientes', 'isAdmin'));
     }
 
     // MÉTODO PARA ORDENAR POR COLUMNA
@@ -80,23 +80,25 @@ class TareaLivewire extends Component
 
     public function create()
     {
-        $this->reset(['tarea', 'estatus', 'fecha', 'horas', 'cliente_id','user_id', 'tarea_id', 'editMode']);
+        $this->reset(['tarea', 'estatus', 'fecha', 'horas', 'cliente_id', 'user_id', 'tarea_id', 'editMode']);
         $this->showModal = true;
         $this->editMode = false;
     }
 
     public function store()
     {
-       // $this->validate();
+        // $this->validate();
+        foreach ($this->user_id as $user) {
+            Tarea::create([
+                'tarea' => $this->tarea,
+                'estatus' => $this->estatus ?? 'Pendiente',
+                'fecha' => $this->fecha,
+                'horas' => $this->horas,
+                'cliente_id' => $this->cliente_id,
+                'user_id' => $user
+            ]);
+        }
 
-        $tarea = Tarea::create([
-            'tarea' => $this->tarea,
-            'estatus' => $this->estatus ?? 'Pendiente',
-            'fecha' => $this->fecha,
-            'horas' => $this->horas,
-            'cliente_id' => $this->cliente_id,
-            'user_id' => $this->user_id
-        ]);
 
         $this->showModal = false;
         session()->flash('success', 'Tarea creada correctamente.');
