@@ -6,32 +6,39 @@
                 class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Nueva Tarea</button>
             <button class="px-4 py-2 bg-zinc-500 text-white rounded hover:bg-zinc-600 transition">Crear Grupo de
                 Tareas</button>
-            <button class="px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700 transition">Imprimir
-                Reporte</button>
+            <button wire:click="exportExcel" class="px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700 transition">Exportar Excel
+                </button>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <input wire:model="search" type="text" class="w-full rounded border-zinc-300 focus:ring-2 focus:ring-blue-500"
-            placeholder="Buscar tarea...">
-        <select wire:model.live="filtroEstatus" class="w-full rounded border-zinc-300 focus:ring-2 focus:ring-blue-500">
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-5 mb-6">
+        <input wire:model.live="search" type="search" class="rounded border focus:ring-2 focus:ring-blue-500"
+            placeholder="Buscar tarea o fecha...">
+
+        <select wire:model.live="filtroEstatus"
+            class="rounded border focus:ring-2 focus:ring-blue-500">
             <option value="">Todos los Estatus</option>
             <option value="Pendiente">Pendiente</option>
             <option value="Iniciada">Iniciada</option>
             <option value="Completada">Completada</option>
         </select>
-        <select wire:model.live="filtroEmpleado"
-            class="w-full rounded border-zinc-300 focus:ring-2 focus:ring-blue-500">
+        <select wire:model.live="filtroEmpleado" class="rounded border focus:ring-2 focus:ring-blue-500">
             <option value="">Todos los Empleados</option>
             @foreach ($empleados as $empleado)
                 <option value="{{ $empleado->id }}">{{ $empleado->name }}</option>
             @endforeach
         </select>
-        <select wire:model.live="filtroCliente" class="w-full rounded border-zinc-300 focus:ring-2 focus:ring-blue-500">
+        <select wire:model.live="filtroCliente" class="rounded border focus:ring-2 focus:ring-blue-500">
             <option value="">Todos los Clientes</option>
             @foreach ($clientes as $cliente)
                 <option value="{{ $cliente->id }}">{{ $cliente->name }}</option>
             @endforeach
+        </select>
+        <select wire:model.live="perPage" class="rounded border focus:ring-2 focus:ring-blue-500">
+            <option value="5">5 por página</option>
+            <option value="10">10 por página</option>
+            <option value="25">25 por página</option>
+            <option value="50">50 por página</option>
         </select>
     </div>
 
@@ -51,7 +58,7 @@
             </thead>
             <tbody>
                 @forelse($tareas_pag as $i => $tarea)
-                    <tr class="border-t border-zinc-200 dark:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800">
+                    <tr class="border-t border-zinc-200 dark:border-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-800">
                         <td class="px-3 py-2">{{ $i + 1 }}</td>
                         <td class="px-3 py-2">{{ $tarea->tarea }}</td>
                         <td class="px-3 py-2">{{ ucfirst($tarea->estatus) }}</td>
@@ -105,6 +112,7 @@
                 @elseif($showTarea)
                     <h2 class="text-xl font-bold mb-4 text-zinc-800 dark:text-zinc-100">Detalle de Tarea</h2>
                     {{-- Mostrar detalles aquí --}}
+
                     <button wire:click="closeModal"
                         class="mt-4 px-4 py-2 bg-zinc-500 text-white rounded hover:bg-zinc-600">Cerrar</button>
                 @else
@@ -116,7 +124,7 @@
                         <div class="mb-3">
                             <label class="block text-zinc-700 dark:text-zinc-200 mb-1">Tarea</label>
                             <input type="text" wire:model="tarea"
-                                class="w-full rounded border-zinc-300 focus:ring-2 focus:ring-blue-500" />
+                                class="w-full rounded border focus:ring-2 focus:ring-blue-500" />
                             @error('tarea')
                                 <span class="text-red-600 text-sm">{{ $message }}</span>
                             @enderror
@@ -124,7 +132,7 @@
                         <div class="mb-3">
                             <label class="block text-zinc-700 dark:text-zinc-200 mb-1">Fecha</label>
                             <input type="date" wire:model="fecha"
-                                class="w-full rounded border-zinc-300 focus:ring-2 focus:ring-blue-500" />
+                                class="w-full rounded border focus:ring-2 focus:ring-blue-500" />
                             @error('fecha')
                                 <span class="text-red-600 text-sm">{{ $message }}</span>
                             @enderror
@@ -132,7 +140,7 @@
                         <div class="mb-3">
                             <label class="block text-zinc-700 dark:text-zinc-200 mb-1">Horas</label>
                             <input type="number" wire:model="horas" min="1" max="10"
-                                class="w-full rounded border-zinc-300 focus:ring-2 focus:ring-blue-500" />
+                                class="w-full rounded border focus:ring-2 focus:ring-blue-500" />
                             @error('horas')
                                 <span class="text-red-600 text-sm">{{ $message }}</span>
                             @enderror
@@ -140,7 +148,7 @@
                         <div class="mb-3">
                             <label class="block text-zinc-700 dark:text-zinc-200 mb-1">Cliente</label>
                             <select wire:model="cliente_id"
-                                class="w-full rounded border-zinc-300 focus:ring-2 focus:ring-blue-500">
+                                class="w-full rounded border focus:ring-2 focus:ring-blue-500">
                                 <option value="">Seleccione Cliente</option>
                                 @foreach ($allClientes as $cliente)
                                     <option value="{{ $cliente->id }}">{{ $cliente->name }}</option>
@@ -150,23 +158,20 @@
                                 <span class="text-red-600 text-sm">{{ $message }}</span>
                             @enderror
                         </div>
-
-
-
                         <div class="mb-3">
                             <label class="block text-zinc-700 dark:text-zinc-200 mb-1">Empleado(s)</label>
                             @if ($editMode)
                                 <select wire:model="user_id"
-                                    class="w-full rounded border-zinc-300 focus:ring-2 focus:ring-blue-500">
-                                   <option value="">Seleccione un empleado</option>
+                                    class="w-full rounded border focus:ring-2 focus:ring-blue-500">
+                                    <option value="">Seleccione un empleado</option>
                                     @foreach ($allEmpleados as $user)
                                         <option value="{{ $user->id }}">{{ $user->name }}</option>
                                     @endforeach
                                 </select>
                             @else
                                 <select wire:model="user_id" multiple
-                                    class="w-full rounded border-zinc-300 focus:ring-2 focus:ring-blue-500">
-                                   <option value="">Seleccione uno o varios empleados (pisando control)</option>
+                                    class="w-full rounded border focus:ring-2 focus:ring-blue-500">
+                                    <option value="">Seleccione uno o varios empleados (pisando control)</option>
                                     @foreach ($allEmpleados as $user)
                                         <option value="{{ $user->id }}">{{ $user->name }}</option>
                                     @endforeach
@@ -189,8 +194,6 @@
         </div>
     @endif
     {{-- fin del modal --}}
-
-
 
     @if (session()->has('message'))
         <div class="mt-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">

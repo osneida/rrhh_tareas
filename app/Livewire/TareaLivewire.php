@@ -2,8 +2,11 @@
 
 namespace App\Livewire;
 
+use App\Http\Requests\TareaRequest;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\TareasExport;
 use App\Models\Tarea;
 use App\Models\User;
 use App\Models\Cliente;
@@ -14,14 +17,13 @@ class TareaLivewire extends Component
 
     public $tareas, $tarea, $tarea_id;
     public $tarea_nombre, $estatus, $fecha, $horas, $user_id, $cliente_id, $observacion;
-    public $modo = 'index';
 
-    // NUEVAS PROPIEDADES PARA FILTROS Y ORDEN
+    //  PROPIEDADES PARA FILTROS Y ORDEN
     public $search = '';
     public $filtroEstatus = '';
     public $filtroEmpleado = '';
     public $filtroCliente = '';
-    public $ordenCampo = 'fecha';
+    public $ordenCampo = 'id';
     public $ordenDireccion = 'desc';
     public $showTarea;
     public $showModal = false;
@@ -29,22 +31,25 @@ class TareaLivewire extends Component
     public $allEmpleados = [];
     public $allClientes = [];
     public $isAdmin = false;
+    public $perPage = 10;
 
     public function mount()
     {
-        $this->allEmpleados = User::all();
-        $this->allClientes = Cliente::all();
-        $this->isAdmin = true;
+        $this->allEmpleados = User::select('id', 'name')->orderBy('name')->get();
+        $this->allClientes  = Cliente::select('id', 'name')->where('estatus', 1)->orderBy('name')->get();
+        $this->isAdmin = true; //Auth::user() && Auth::user()->hasRole('Admin')
     }
 
-    public function render()
+    private function buildQuery()
     {
-        $isAdmin = true; //Auth::user() && Auth::user()->hasRole('Admin')
-        $query = Tarea::with(['user', 'cliente']);
+        $query = Tarea::with(['cliente:id,name', 'user:id,name']);
 
         // FILTRO DE BÚSQUEDA
         if ($this->search) {
-            $query->where('tarea', 'like', '%' . $this->search . '%');
+            $query->where(function ($q) {
+                $q->where('tarea', 'like', '%' . $this->search . '%')
+                    ->orWhere('fecha', 'like', '%' . $this->search . '%');
+            });
         }
 
         // FILTROS SELECT
@@ -58,12 +63,21 @@ class TareaLivewire extends Component
             $query->where('cliente_id', $this->filtroCliente);
         }
 
-        //  $isAdmin = $this->isAdmin;
         // ORDENAMIENTO
         $query->orderBy($this->ordenCampo, $this->ordenDireccion);
-        $tareas_pag = $query->paginate(10);
-        $empleados = User::all();
-        $clientes = Cliente::all();
+
+        return $query;
+    }
+
+    public function render()
+    {
+        $isAdmin = $this->isAdmin;
+
+        $query = $this->buildQuery();
+
+        $tareas_pag = $query->paginate($this->perPage);
+        $empleados  = $this->allEmpleados;
+        $clientes   = $this->allClientes;
         return view('livewire.tarea-livewire', compact('tareas_pag', 'empleados', 'clientes', 'isAdmin'));
     }
 
@@ -87,15 +101,26 @@ class TareaLivewire extends Component
 
     public function store()
     {
-        // $this->validate();
-        foreach ($this->user_id as $user) {
+        $this->validate($this->reglasTarea());
+
+        if ($this->user_id) {
+            foreach ($this->user_id as $user) {
+                Tarea::create([
+                    'tarea'      => $this->tarea,
+                    'estatus'    => $this->estatus ?? 'Pendiente',
+                    'fecha'      => $this->fecha,
+                    'horas'      => $this->horas,
+                    'cliente_id' => $this->cliente_id,
+                    'user_id'    => $user
+                ]);
+            }
+        } else {
             Tarea::create([
-                'tarea' => $this->tarea,
-                'estatus' => $this->estatus ?? 'Pendiente',
-                'fecha' => $this->fecha,
-                'horas' => $this->horas,
+                'tarea'      => $this->tarea,
+                'estatus'    => $this->estatus ?? 'Pendiente',
+                'fecha'      => $this->fecha,
+                'horas'      => $this->horas,
                 'cliente_id' => $this->cliente_id,
-                'user_id' => $user
             ]);
         }
 
@@ -106,7 +131,7 @@ class TareaLivewire extends Component
 
     public function show($id)
     {
-        $this->showTarea = Tarea::with(['cliente', 'user'])->findOrFail($id);
+        $this->showTarea = Tarea::with(['cliente:id,name', 'user:id,name'])->findOrFail($id);
         $this->showModal = true;
         $this->editMode = false;
     }
@@ -127,7 +152,7 @@ class TareaLivewire extends Component
 
     public function update()
     {
-        //$this->validate();
+        $this->validate($this->reglasTarea());
 
         $tarea = Tarea::findOrFail($this->tarea_id);
         $tarea->update([
@@ -137,9 +162,7 @@ class TareaLivewire extends Component
             'horas' => $this->horas,
             'cliente_id' => $this->cliente_id,
             'user_id' => $this->user_id,
-
         ]);
-
 
         $this->showModal = false;
         session()->flash('success', 'Tarea actualizada correctamente.');
@@ -156,5 +179,31 @@ class TareaLivewire extends Component
     {
         $this->showModal = false;
         $this->showTarea = null;
+    }
+
+    private function reglasTarea()
+    {
+        return (new TareaRequest())->rules();
+    }
+
+    public function updatingPerPage()
+    {
+        $this->resetPage();
+    }
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function exportExcel()
+    {
+        $fileName = 'tareas_' . now()->format('Y-m-d_H-i-s') . '.xlsx';
+        $query = $this->buildQuery();
+        $data = $query->get(); // Reutilizar la lógica de la consulta y obtener los datos
+
+        return Excel::download(
+            new TareasExport($data),
+            $fileName
+        );
     }
 }
