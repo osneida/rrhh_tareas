@@ -13,15 +13,24 @@ class TareaRequest extends FormRequest
 
     public function rules(): array
     {
-        return [
+        $rules = [
             'tarea'      => 'required|string|min:3|max:255',
-            'fecha'      => 'required|date|after_or_equal:today',
             'cliente_id' => 'required|exists:clientes,id',
             'horas'      => 'required|numeric|min:1|max:10',
-            'user_id'    => 'nullable|sometimes|exists:users,id',
+            'user_id'    => 'nullable|exists:users,id',
             'estatus'    => 'nullable|string|in:Pendiente,Iniciada,Completada',
         ];
+
+        // Si es una tarea nueva, la fecha debe ser mayor o igual a hoy
+        if ($this->isMethod('post')) {
+            $rules['fecha'] = 'required|date|after_or_equal:today';
+        }
+
+        // Si es una tarea existente (edición), la fecha puede ser cualquier valor válido
+        if ($this->isMethod('put') || $this->isMethod('patch')) {
+            $rules['fecha'] = 'required|date';
+        }
+
+        return $rules;
     }
-
-
 }

@@ -6,8 +6,9 @@
                 class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Nueva Tarea</button>
             <button class="px-4 py-2 bg-zinc-500 text-white rounded hover:bg-zinc-600 transition">Crear Grupo de
                 Tareas</button>
-            <button wire:click="exportExcel" class="px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700 transition">Exportar Excel
-                </button>
+            <button wire:click="exportExcel"
+                class="px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700 transition">Exportar Excel
+            </button>
         </div>
     </div>
 
@@ -15,8 +16,7 @@
         <input wire:model.live="search" type="search" class="rounded border focus:ring-2 focus:ring-blue-500"
             placeholder="Buscar tarea o fecha...">
 
-        <select wire:model.live="filtroEstatus"
-            class="rounded border focus:ring-2 focus:ring-blue-500">
+        <select wire:model.live="filtroEstatus" class="rounded border focus:ring-2 focus:ring-blue-500">
             <option value="">Todos los Estatus</option>
             <option value="Pendiente">Pendiente</option>
             <option value="Iniciada">Iniciada</option>
@@ -72,9 +72,9 @@
                             @if ($isAdmin)
                                 <button wire:click="edit({{ $tarea->id }})"
                                     class="px-2 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 text-xs">Editar</button>
-                                <button wire:click="destroy({{ $tarea->id }})"
-                                    class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs"
-                                    onclick="return confirm('¿Realmente desea borrar la tarea:  {{ $tarea->tarea }} ?')">Eliminar</button>
+                                <button wire:click="confirmDelete({{ $tarea->id }})"
+                                    class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs">Eliminar</button>
+                                {{--  onclick="return confirm('¿Realmente desea borrar la tarea:  {{ $tarea->tarea }} ?')" --}}
                             @endif
                         </td>
                     </tr>
@@ -110,11 +110,57 @@
                 @if ($editMode)
                     <h2 class="text-xl font-bold mb-4 text-zinc-800 dark:text-zinc-100">Editar Tarea</h2>
                 @elseif($showTarea)
-                    <h2 class="text-xl font-bold mb-4 text-zinc-800 dark:text-zinc-100">Detalle de Tarea</h2>
-                    {{-- Mostrar detalles aquí --}}
+                    <h2 class="text-xl font-bold mb-4 text-zinc-800 dark:text-zinc-100">
+                        @if ($deleteMode)
+                            Confirmar Eliminación de Tarea
+                        @else
+                            Detalle de Tarea
+                        @endif
+                    </h2>
 
-                    <button wire:click="closeModal"
-                        class="mt-4 px-4 py-2 bg-zinc-500 text-white rounded hover:bg-zinc-600">Cerrar</button>
+
+                    <div class="mb-3">
+                        <label class="block text-zinc-700 dark:text-zinc-200 mb-1">Tarea</label>
+                        <input type="text" wire:model="tarea" readonly
+                            class="w-full rounded border bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="block text-zinc-700 dark:text-zinc-200 mb-1">Fecha</label>
+                        <input type="date" wire:model="fecha" readonly
+                            class="w-full rounded border bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="block text-zinc-700 dark:text-zinc-200 mb-1">Horas</label>
+                        <input type="number" wire:model="horas" readonly
+                            class="w-full rounded border bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="block text-zinc-700 dark:text-zinc-200 mb-1">Cliente</label>
+                        <input type="text" value="{{ optional($allClientes->find($cliente_id))->name }}" readonly
+                            class="w-full rounded border bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="block text-zinc-700 dark:text-zinc-200 mb-1">Empleado(s)</label>
+                        <input type="text"
+                            value="@if (is_array($user_id)) {{ $allEmpleados->whereIn('id', $user_id)->pluck('name')->join(', ') }}@else{{ optional($allEmpleados->find($user_id))->name }} @endif"
+                            readonly
+                            class="w-full rounded border bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200" />
+                    </div>
+                    @if ($deleteMode)
+                        <div class="text-red-600 font-semibold mb-4">¿Estás seguro que deseas eliminar esta tarea?
+                        </div>
+                        <div class="flex gap-2">
+                            <button wire:click="destroy({{ $tarea_id }})"
+                                class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Eliminar</button>
+                            <button wire:click="closeModal"
+                                class="px-4 py-2 bg-zinc-500 text-white rounded hover:bg-zinc-600">Cancelar</button>
+                        </div>
+                    @else
+                        <button wire:click="closeModal"
+                            class="mt-4 px-4 py-2 bg-zinc-500 text-white rounded hover:bg-zinc-600">Cerrar</button>
+                    @endif
+
+
                 @else
                     <h2 class="text-xl font-bold mb-4 text-zinc-800 dark:text-zinc-100">Nueva Tarea</h2>
                 @endif
@@ -184,7 +230,8 @@
                         </div>
                         <div class="flex gap-2 mt-4">
                             <button type="submit"
-                                class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">Guardar</button>
+                                class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">Guardar
+                                Nueo</button>
                             <button type="button" wire:click="closeModal"
                                 class="px-4 py-2 bg-zinc-500 text-white rounded hover:bg-zinc-600">Volver</button>
                         </div>
@@ -195,9 +242,9 @@
     @endif
     {{-- fin del modal --}}
 
-    @if (session()->has('message'))
+    @if (session()->has('success'))
         <div class="mt-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
-            {{ session('message') }}
+            {{ session('success') }}
         </div>
     @endif
 </div>

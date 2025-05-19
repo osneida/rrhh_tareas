@@ -10,6 +10,8 @@ use App\Exports\TareasExport;
 use App\Models\Tarea;
 use App\Models\User;
 use App\Models\Cliente;
+use Illuminate\Support\Facades\Log;
+use PhpParser\Node\Stmt\TryCatch;
 
 class TareaLivewire extends Component
 {
@@ -28,6 +30,7 @@ class TareaLivewire extends Component
     public $showTarea;
     public $showModal = false;
     public $editMode = false;
+    public $deleteMode = false;
     public $allEmpleados = [];
     public $allClientes = [];
     public $isAdmin = false;
@@ -71,14 +74,18 @@ class TareaLivewire extends Component
 
     public function render()
     {
-        $isAdmin = $this->isAdmin;
+        try {
+            $isAdmin = $this->isAdmin;
 
-        $query = $this->buildQuery();
+            $query = $this->buildQuery();
 
-        $tareas_pag = $query->paginate($this->perPage);
-        $empleados  = $this->allEmpleados;
-        $clientes   = $this->allClientes;
-        return view('livewire.tarea-livewire', compact('tareas_pag', 'empleados', 'clientes', 'isAdmin'));
+            $tareas_pag = $query->paginate($this->perPage);
+            $empleados  = $this->allEmpleados;
+            $clientes   = $this->allClientes;
+            return view('livewire.tarea-livewire', compact('tareas_pag', 'empleados', 'clientes', 'isAdmin'));
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 
     // MÉTODO PARA ORDENAR POR COLUMNA
@@ -94,9 +101,10 @@ class TareaLivewire extends Component
 
     public function create()
     {
-        $this->reset(['tarea', 'estatus', 'fecha', 'horas', 'cliente_id', 'user_id', 'tarea_id', 'editMode']);
+        $this->reset(['tarea', 'estatus', 'fecha', 'horas', 'cliente_id', 'user_id', 'tarea_id', 'editMode', 'deleteMode']);
         $this->showModal = true;
         $this->editMode = false;
+        $this->deleteMode = false;
     }
 
     public function store()
@@ -131,9 +139,18 @@ class TareaLivewire extends Component
 
     public function show($id)
     {
-        $this->showTarea = Tarea::with(['cliente:id,name', 'user:id,name'])->findOrFail($id);
+        $this->showTarea = $tarea =  Tarea::with(['cliente:id,name', 'user:id,name'])->findOrFail($id);
+        $this->tarea_id = $tarea->id;
+        $this->tarea = $tarea->tarea;
+        $this->estatus = $tarea->estatus;
+        $this->fecha = $tarea->fecha;
+        $this->horas = $tarea->horas;
+        $this->cliente_id = $tarea->cliente_id;
+        $this->user_id = $tarea->user_id;
+
         $this->showModal = true;
         $this->editMode = false;
+        $this->deleteMode = false;
     }
 
     public function edit($id)
@@ -148,31 +165,53 @@ class TareaLivewire extends Component
         $this->user_id = $tarea->user_id; //->pluck('id')->toArray() ?? [];
         $this->showModal = true;
         $this->editMode = true;
+        $this->deleteMode = false;
     }
 
     public function update()
     {
-        $this->validate($this->reglasTarea());
+        try {
+            $this->validate($this->reglasTarea());
 
-        $tarea = Tarea::findOrFail($this->tarea_id);
-        $tarea->update([
-            'tarea' => $this->tarea,
-            'estatus' => $this->estatus,
-            'fecha' => $this->fecha,
-            'horas' => $this->horas,
-            'cliente_id' => $this->cliente_id,
-            'user_id' => $this->user_id,
-        ]);
+            $tarea = Tarea::findOrFail($this->tarea_id);
+            $tarea->update([
+                'tarea' => $this->tarea,
+                'estatus' => $this->estatus,
+                'fecha' => $this->fecha,
+                'horas' => $this->horas,
+                'cliente_id' => $this->cliente_id,
+                'user_id' => $this->user_id,
+            ]);
 
-        $this->showModal = false;
-        session()->flash('success', 'Tarea actualizada correctamente.');
+            $this->showModal = false;
+
+            session()->flash('success', 'Tarea actualizada correctamente.');
+        } catch (\Throwable $th) {
+            throw $th;
+            Log::info('Error en update ', $th);
+        }
+    }
+
+    public function confirmDelete($id)
+    {
+        $this->show($id);
+        $this->deleteMode = true; // Activar modo eliminar
     }
 
     public function destroy($id)
     {
-        $tarea = Tarea::findOrFail($id);
-        $tarea->delete();
-        session()->flash('success', 'Tarea eliminada correctamente.');
+        try {
+            $tarea = Tarea::findOrFail($id);
+            $tarea->delete();
+
+            $this->deleteMode = false;
+            $this->showModal = false; // Cierra el modal
+            $this->showTarea = null;
+            session()->flash('success', 'Tarea eliminada correctamente.');
+        } catch (\Throwable $th) {
+            throw $th;
+            Log::info('Error al eliminar destroy ', $th);
+        }
     }
 
     public function closeModal()
@@ -190,6 +229,7 @@ class TareaLivewire extends Component
     {
         $this->resetPage();
     }
+
     public function updatingSearch()
     {
         $this->resetPage();
