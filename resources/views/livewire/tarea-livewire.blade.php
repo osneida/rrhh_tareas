@@ -1,6 +1,6 @@
 <div class="p-6">
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-        <h2 class="text-2xl font-bold text-zinc-800 dark:text-zinc-100">Listado de Tareas</h2>
+        <h2 class="text-2xl font-bold text-zinc-800 dark:text-zinc-100">{{__('Task List')}}</h2>
         <div class="flex gap-2">
             <button wire:click="create"
                 class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Nueva Tarea</button>
