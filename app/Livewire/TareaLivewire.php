@@ -174,14 +174,29 @@ class TareaLivewire extends Component
             $this->validate($this->reglasTarea());
 
             $tarea = Tarea::findOrFail($this->tarea_id);
-            $tarea->update([
-                'tarea' => $this->tarea,
-                'estatus' => $this->estatus,
-                'fecha' => $this->fecha,
-                'horas' => $this->horas,
-                'cliente_id' => $this->cliente_id,
-                'user_id' => $this->user_id,
-            ]);
+
+
+            if ($this->user_id) {
+                $tarea->update([
+                    'tarea' => $this->tarea,
+                    'estatus' => $this->estatus,
+                    'fecha' => $this->fecha,
+                    'horas' => $this->horas,
+                    'cliente_id' => $this->cliente_id,
+                    'user_id' => $this->user_id,
+                ]);
+            } else {
+                $tarea->update([
+                    'tarea' => $this->tarea,
+                    'estatus' => $this->estatus,
+                    'fecha' => $this->fecha,
+                    'horas' => $this->horas,
+                    'cliente_id' => $this->cliente_id,
+                    'user_id' => null,
+                ]);
+            }
+
+
 
             $this->showModal = false;
 
