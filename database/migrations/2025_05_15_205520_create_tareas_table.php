@@ -15,14 +15,16 @@ return new class extends Migration
             $table->id();
             $table->string('tarea');
             $table->string('estatus')->default('Pendiente');
-            $table->date('fecha')->default(now());
+            $table->date('fecha');
             $table->integer('horas')->default(1);
             $table->string('observacion')->nullable();
 
-            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable()->index();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
-            $table->unsignedBigInteger('cliente_id')->nullable();
-            $table->foreign('cliente_id')->references('id')->on('clientes')->onDelete('set null');
+
+            $table->unsignedBigInteger('cliente_id')->index();
+            $table->foreign('cliente_id')->references('id')->on('clientes');
+
             $table->timestamps();
         });
     }

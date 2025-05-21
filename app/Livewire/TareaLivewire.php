@@ -80,9 +80,7 @@ class TareaLivewire extends Component
             $query = $this->buildQuery();
 
             $tareas_pag = $query->paginate($this->perPage);
-            $empleados  = $this->allEmpleados;
-            $clientes   = $this->allClientes;
-            return view('livewire.tarea-livewire', compact('tareas_pag', 'empleados', 'clientes', 'isAdmin'));
+            return view('livewire.tarea-livewire', compact('tareas_pag',  'isAdmin'));
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -110,28 +108,18 @@ class TareaLivewire extends Component
     public function store()
     {
         $this->validate($this->reglasTarea());
+        $userIds = is_array($this->user_id) ? $this->user_id : [$this->user_id];
 
-        if ($this->user_id) {
-            foreach ($this->user_id as $user) {
-                Tarea::create([
-                    'tarea'      => $this->tarea,
-                    'estatus'    => $this->estatus ?? 'Pendiente',
-                    'fecha'      => $this->fecha,
-                    'horas'      => $this->horas,
-                    'cliente_id' => $this->cliente_id,
-                    'user_id'    => $user
-                ]);
-            }
-        } else {
+        foreach ($userIds as $uid) {
             Tarea::create([
-                'tarea'      => $this->tarea,
-                'estatus'    => $this->estatus ?? 'Pendiente',
-                'fecha'      => $this->fecha,
-                'horas'      => $this->horas,
-                'cliente_id' => $this->cliente_id,
+                'tarea'       => $this->tarea,
+                'fecha'       => $this->fecha,
+                'horas'       => $this->horas,
+                'observacion' => $this->observacion,
+                'user_id'     => $uid,
+                'cliente_id'  => $this->cliente_id,
             ]);
         }
-
 
         $this->showModal = false;
         session()->flash('success', 'Tarea creada correctamente.');

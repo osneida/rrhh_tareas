@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Tarea;
 
-class Cliente extends Api # Model
+class Cliente extends Model
 {
 
     use HasFactory;

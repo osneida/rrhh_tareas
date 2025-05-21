@@ -24,13 +24,13 @@
         </flux:select>
         <flux:select wire:model.live="filtroEmpleado">
             <option value="">{{ __('All Employees') }}</option>
-            @foreach ($empleados as $empleado)
+            @foreach ($allEmpleados as $empleado)
                 <option value="{{ $empleado->id }}">{{ $empleado->name }}</option>
             @endforeach
         </flux:select>
         <flux:select wire:model.live="filtroCliente">
             <option value="">{{ __('All Clients') }}</option>
-            @foreach ($clientes as $cliente)
+            @foreach ($allClientes as $cliente)
                 <option value="{{ $cliente->id }}">{{ $cliente->name }}</option>
             @endforeach
         </flux:select>

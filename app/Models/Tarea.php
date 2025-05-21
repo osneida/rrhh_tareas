@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\Cliente;
 use App\Models\User;
 
-class Tarea extends  Api #Model
+class Tarea extends Model
 {
     protected $fillable = [
         'tarea',
