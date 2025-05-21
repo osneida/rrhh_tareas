@@ -163,35 +163,21 @@ class TareaLivewire extends Component
 
             $tarea = Tarea::findOrFail($this->tarea_id);
 
-
-            if ($this->user_id) {
-                $tarea->update([
-                    'tarea' => $this->tarea,
-                    'estatus' => $this->estatus,
-                    'fecha' => $this->fecha,
-                    'horas' => $this->horas,
-                    'cliente_id' => $this->cliente_id,
-                    'user_id' => $this->user_id,
-                ]);
-            } else {
-                $tarea->update([
-                    'tarea' => $this->tarea,
-                    'estatus' => $this->estatus,
-                    'fecha' => $this->fecha,
-                    'horas' => $this->horas,
-                    'cliente_id' => $this->cliente_id,
-                    'user_id' => null,
-                ]);
-            }
-
-
+            $tarea->update([
+                'tarea'      => $this->tarea,
+                'estatus'    => $this->estatus,
+                'fecha'      => $this->fecha,
+                'horas'      => $this->horas,
+                'cliente_id' => $this->cliente_id,
+                'user_id'    => $this->user_id ?: null, // Si está vacío, lo pone en null
+            ]);
 
             $this->showModal = false;
 
             session()->flash('success', 'Tarea actualizada correctamente.');
         } catch (\Throwable $th) {
+            Log::error('Error en update: ' . $th->getMessage());
             throw $th;
-            Log::info('Error en update ', $th);
         }
     }
 
@@ -207,19 +193,22 @@ class TareaLivewire extends Component
             $tarea = Tarea::findOrFail($id);
             $tarea->delete();
 
-            $this->deleteMode = false;
-            $this->showModal = false; // Cierra el modal
-            $this->showTarea = null;
+            $this->closeModal();
+           // $this->deleteMode = false;
+            //$this->showModal = false; // Cierra el modal
+            //$this->showTarea = null;
+
             session()->flash('success', 'Tarea eliminada correctamente.');
         } catch (\Throwable $th) {
+            Log::error('Error al eliminar destroy: ' . $th->getMessage());
             throw $th;
-            Log::info('Error al eliminar destroy ', $th);
         }
     }
 
     public function closeModal()
     {
-        $this->showModal = false;
+        $this->deleteMode = false;
+        $this->showModal = false; // Cierra el modal
         $this->showTarea = null;
     }
 
