@@ -36,8 +36,10 @@
 
 
         <flux:navlist variant="outline">
-
-
+            @php
+                $user = auth()->user();
+            @endphp
+              @if ($user && $user->role === 'admin')
             <flux:navlist.group :heading="__('Admin')" class="grid">
                 <flux:navlist.item icon="bars-3" :href="route('tareas.index')"
                     :current="request()->routeIs('tareas.index')" wire:navigate>{{ __('Tasks') }}</flux:navlist.item>
@@ -46,6 +48,7 @@
                 <flux:navlist.item icon="bars-3" :href="route('tareas.index')"
                     :current="request()->routeIs('tareas.index')" wire:navigate>{{ __('Employees') }}</flux:navlist.item>
             </flux:navlist.group>
+                @endif
         </flux:navlist>
 
 

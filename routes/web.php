@@ -21,11 +21,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('settings/profile', Profile::class)->name('settings.profile');
     Route::get('settings/password', Password::class)->name('settings.password');
     Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
-    Route::get('/tareas', TareaLivewire::class)->name('tareas.index');
-
 
     // Route::get('language/lang', [LanguageController::class, 'changeLanguage'])->name('lang');
 });
+
+//cree un middleware role
+Route::middleware(['auth', 'role:admin'])->group(function () {
+   Route::get('/tareas', TareaLivewire::class)->name('tareas.index');
+});
+
 
 Route::get('lang/{lang}', function ($lang) {
     if (array_key_exists($lang, config('languages'))) {
