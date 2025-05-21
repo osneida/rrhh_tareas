@@ -24,6 +24,7 @@ class User extends Authenticatable
         'email',
         'password',
         'status',
+        'role'
     ];
 
     /**
@@ -58,6 +59,11 @@ class User extends Authenticatable
             ->explode(' ')
             ->map(fn(string $name) => Str::of($name)->substr(0, 1))
             ->implode('');
+    }
+
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
     }
 
     public function tareas(): HasMany

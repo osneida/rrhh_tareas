@@ -18,7 +18,8 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->unsignedTinyInteger('status')->default(StatusEnum::ACTIVE)->comment(StatusEnum::ACTIVE.'='.trans('statuse.'.StatusEnum::ACTIVE).', ' .StatusEnum::INACTIVE.'='.trans('statuse.'.StatusEnum::INACTIVE));
+            $table->string('role',10)->default('empleado');
+            $table->unsignedTinyInteger('status')->default(StatusEnum::ACTIVE)->comment(StatusEnum::INACTIVE . ' = Inactivo, ' . StatusEnum::ACTIVE . ' = Activo');
             $table->rememberToken();
             $table->timestamps();
         });

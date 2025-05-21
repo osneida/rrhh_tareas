@@ -10,8 +10,8 @@ use App\Exports\TareasExport;
 use App\Models\Tarea;
 use App\Models\User;
 use App\Models\Cliente;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use PhpParser\Node\Stmt\TryCatch;
 
 class TareaLivewire extends Component
 {
@@ -40,7 +40,7 @@ class TareaLivewire extends Component
     {
         $this->allEmpleados = User::select('id', 'name')->where('status', 1)->orderBy('name')->get();
         $this->allClientes  = Cliente::select('id', 'name')->where('status', 1)->orderBy('name')->get();
-        $this->isAdmin = true; //Auth::user() && Auth::user()->hasRole('Admin')
+        $this->isAdmin = Auth::user() && Auth::user()->role === 'admin';
     }
 
     private function buildQuery()

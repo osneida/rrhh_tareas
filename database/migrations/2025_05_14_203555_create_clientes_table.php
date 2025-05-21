@@ -11,12 +11,12 @@ return new class extends Migration
     {
         Schema::create('clientes', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 45);
+            $table->string('name', 45)->unique();
             $table->string('address')->nullable();
-            $table->string('cif')->nullable();
-            $table->string('mail')->nullable();
-            $table->string('phone')->nullable();
-            $table->unsignedTinyInteger('status')->default(StatusEnum::ACTIVE)->comment(StatusEnum::ACTIVE.'='.trans('statuse.'.StatusEnum::ACTIVE).', ' .StatusEnum::INACTIVE.'='.trans('statuse.'.StatusEnum::INACTIVE));
+            $table->string('cif')->nullable()->unique();
+            $table->string('mail')->nullable()->unique();
+            $table->string('phone')->nullable()->unique();
+            $table->unsignedTinyInteger('status')->default(StatusEnum::ACTIVE)->comment(StatusEnum::INACTIVE . ' = Inactivo, ' . StatusEnum::ACTIVE . ' = Activo');
             $table->timestamps();
         });
     }
