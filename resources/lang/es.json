@@ -57,6 +57,7 @@
     "Hours": "Horas",
     "Employee": "Empleado",
     "Client": "Cliente",
+    "Clients": "Clientes",
     "Actions": "Acciones",
     "View": "Ver",
     "Edit": "Editar",
@@ -76,5 +77,6 @@
     "Select one employee":"Seleccione un empleado",
     "Save": "Guardar",
     "Back": "Volver",
-    "Task Description":"Descripción de la Tarea ..."
+    "Task Description":"Descripción de la Tarea ...",
+    "Employees": "Empleados"
 }

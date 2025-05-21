@@ -23,6 +23,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'status',
     ];
 
     /**
@@ -55,12 +56,17 @@ class User extends Authenticatable
     {
         return Str::of($this->name)
             ->explode(' ')
-            ->map(fn (string $name) => Str::of($name)->substr(0, 1))
+            ->map(fn(string $name) => Str::of($name)->substr(0, 1))
             ->implode('');
     }
 
-     public function tareas(): HasMany
+    public function tareas(): HasMany
     {
         return $this->hasMany(Tarea::class);
+    }
+
+    public static function total_empleados()
+    {
+        return User::where('status', 1)->count();
     }
 }

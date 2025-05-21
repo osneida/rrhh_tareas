@@ -14,7 +14,8 @@
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-5 gap-5 mb-6">
-        <flux:input  wire:model.live="search" type="search" icon="magnifying-glass" placeholder="{{ __('Search task or date...') }}" />
+        <flux:input wire:model.live="search" type="search" icon="magnifying-glass"
+            placeholder="{{ __('Search task or date...') }}" />
         <flux:select wire:model.live="filtroEstatus">
             <option value="">{{ __('All Statuses') }}</option>
             <option value="Pendiente">{{ __('Pending') }}</option>
@@ -109,7 +110,7 @@
                 @elseif($showTarea)
                     <h2 class="text-xl font-bold mb-4 text-zinc-800 dark:text-zinc-100">
                         @if ($deleteMode)
-                           {{ __('Confirm Task Deletion') }}
+                            {{ __('Confirm Task Deletion') }}
                         @else
                             {{ __('Task Details') }}
                         @endif
@@ -143,7 +144,8 @@
                             class="w-full rounded border bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200" />
                     </div>
                     @if ($deleteMode)
-                        <div class="text-red-600 font-semibold mb-4">{{ __('Are you sure you want to delete this task?') }}
+                        <div class="text-red-600 font-semibold mb-4">
+                            {{ __('Are you sure you want to delete this task?') }}
                         </div>
                         <div class="flex gap-2">
                             <button wire:click="destroy({{ $tarea_id }})"
@@ -162,9 +164,8 @@
                 @if (!$showTarea)
                     <form wire:submit.prevent="{{ $editMode ? 'update' : 'store' }}">
                         <div class="mb-3">
-                            <label class="block text-zinc-700 dark:text-zinc-200 mb-1">{{ __('Task') }}</label>
-                            <textarea autofocus wire:model="tarea" class="w-full rounded border focus:ring-2 focus:ring-blue-500" id="tarea"
-                                name="tarea" rows="2" placeholder="{{ __('Task Description')}}" maxlength="255"></textarea>
+                            <flux:textarea autofocus wire:model="tarea" rows="2" maxlength="255"
+                                label="{{ __('Task') }}" placeholder="{{ __('Task Description') }}" />
                             @error('tarea')
                                 <span class="text-red-600 text-sm">{{ $message }}</span>
                             @enderror
@@ -225,7 +226,7 @@
                         <div class="flex gap-2 mt-4">
                             <button type="submit"
                                 class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">{{ __('Save') }}
-                                </button>
+                            </button>
                             <button type="button" wire:click="closeModal"
                                 class="px-4 py-2 bg-zinc-500 text-white rounded hover:bg-zinc-600">{{ __('Back') }}</button>
                         </div>

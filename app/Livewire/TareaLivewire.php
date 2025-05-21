@@ -38,8 +38,8 @@ class TareaLivewire extends Component
 
     public function mount()
     {
-        $this->allEmpleados = User::select('id', 'name')->orderBy('name')->get();
-        $this->allClientes  = Cliente::select('id', 'name')->where('estatus', 1)->orderBy('name')->get();
+        $this->allEmpleados = User::select('id', 'name')->where('status', 1)->orderBy('name')->get();
+        $this->allClientes  = Cliente::select('id', 'name')->where('status', 1)->orderBy('name')->get();
         $this->isAdmin = true; //Auth::user() && Auth::user()->hasRole('Admin')
     }
 

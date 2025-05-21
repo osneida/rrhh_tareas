@@ -11,12 +11,12 @@ class Cliente extends Api # Model
 {
 
     use HasFactory;
-    protected $fillable = ['name', 'address', 'cif', 'mail', 'phone', 'estatus'];
+    protected $fillable = ['name', 'address', 'cif', 'mail', 'phone', 'status'];
 
 
     public static function total_clientes()
     {
-        return Cliente::where('estatus', 1)->count();
+        return Cliente::where('status', 1)->count();
     }
 
     public function tareas(): HasMany

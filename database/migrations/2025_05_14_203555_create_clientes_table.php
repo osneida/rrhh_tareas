@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Enums\StatusEnum;
 
 return new class extends Migration
 {
@@ -15,7 +16,7 @@ return new class extends Migration
             $table->string('cif')->nullable();
             $table->string('mail')->nullable();
             $table->string('phone')->nullable();
-            $table->boolean('estatus')->default(true);
+            $table->unsignedTinyInteger('status')->default(StatusEnum::ACTIVE)->comment(StatusEnum::ACTIVE.'='.trans('statuse.'.StatusEnum::ACTIVE).', ' .StatusEnum::INACTIVE.'='.trans('statuse.'.StatusEnum::INACTIVE));
             $table->timestamps();
         });
     }

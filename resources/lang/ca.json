@@ -55,6 +55,7 @@
     "Hours": "Hores",
     "Employee": "Empleat",
     "Client": "Client",
+    "Clients": "Clients",
     "Actions": "Accions",
     "View": "Veure",
     "Edit": "Editar",
@@ -74,5 +75,6 @@
     "Select one or more employees": "Selecciona un o més empleats",
     "Save": "Desar",
     "Back": "Enrere",
-    "Task Description": "Descripció de la Tasca ..."
+    "Task Description": "Descripció de la Tasca ...",
+    "Employees": "empleats"
 }
