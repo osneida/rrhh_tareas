@@ -1,4 +1,4 @@
-Desarrollada con Laravel - Livewire
+Desarrollada con Laravel 12 - Livewire
 
 Aplicación donde se crean Tareas para un Cliente y se le asignar a uno o varios empleados para que las realicen, con las horas totales de tareas realizadas se calcula el sueldo mensual del empleado.
 
