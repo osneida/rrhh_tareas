@@ -1,5 +1,7 @@
 <?php
 
+use App\Livewire\ClienteLivewire;
+use App\Livewire\EmpleadoLivewire;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
@@ -27,7 +29,10 @@ Route::middleware(['auth'])->group(function () {
 
 //cree un middleware role
 Route::middleware(['auth', 'role:admin'])->group(function () {
-   Route::get('/tareas', TareaLivewire::class)->name('tareas.index');
+    Route::get('/tareas', TareaLivewire::class)->name('tareas.index');
+    Route::get('/clientes', ClienteLivewire::class)->name('clientes.index');
+    Route::get('/empleados', EmpleadoLivewire::class)->name('empleados.index');
+
 });
 
 

@@ -4,11 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Cliente;
 use App\Models\User;
 
 class Tarea extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'tarea',
         'estatus',
@@ -28,5 +31,4 @@ class Tarea extends Model
     {
         return $this->belongsTo(Cliente::class);
     }
-
 }
