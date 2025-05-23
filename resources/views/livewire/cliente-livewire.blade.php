@@ -34,7 +34,7 @@
                     <th wire:click="ordenarPor('cif')">{{ __('cif') }}</th>
                     <th wire:click="ordenarPor('mail')">{{ __('mail') }}</th>
                     <th wire:click="ordenarPor('phone')">{{ __('phone') }}</th>
-                    <th wire:click="ordenarPor('status')">{{ __('Status') }}</th>
+                    <th wire:click="ordenarPor('status')">{{ __('status') }}</th>
                     <th>{{ __('Actions') }}</th>
                 </tr>
             </thead>

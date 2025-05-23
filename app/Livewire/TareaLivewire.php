@@ -75,12 +75,10 @@ class TareaLivewire extends Component
     public function render()
     {
         try {
-            $isAdmin = $this->isAdmin;
-
             $query = $this->buildQuery();
 
             $tareas_pag = $query->paginate($this->perPage);
-            return view('livewire.tarea-livewire', compact('tareas_pag',  'isAdmin'));
+            return view('livewire.tarea-livewire', compact('tareas_pag'));
         } catch (\Throwable $th) {
             Log::error('Error en update: ' . $th->getMessage());
             throw $th;
@@ -123,7 +121,7 @@ class TareaLivewire extends Component
         }
 
         $this->showModal = false;
-        session()->flash('success', 'Tarea creada correctamente.');
+        session()->flash('success', __('Task created successfully'));
     }
 
     public function show($id)
@@ -174,7 +172,7 @@ class TareaLivewire extends Component
 
             $this->showModal = false;
 
-            session()->flash('success', 'Tarea actualizada correctamente.');
+            session()->flash('success', __('Task updated successfully'));
         } catch (\Throwable $th) {
             Log::error('Error en update: ' . $th->getMessage());
             throw $th;
@@ -200,7 +198,7 @@ class TareaLivewire extends Component
             //$this->showModal = false; // Cierra el modal
             //$this->showTarea = null;
 
-            session()->flash('success', 'Tarea eliminada correctamente.');
+            session()->flash('success', __('Task deleted successfully'));
         } catch (\Throwable $th) {
             Log::error('Error al eliminar destroy: ' . $th->getMessage());
             throw $th;

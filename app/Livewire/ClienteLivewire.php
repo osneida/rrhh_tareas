@@ -94,7 +94,6 @@ class ClienteLivewire extends Component
         $this->deleteMode = false;
     }
 
-
     public function create()
     {
         $this->reset(['name', 'address',  'mail', 'phone', 'status', 'cif', 'cliente_id', 'editMode', 'deleteMode']);
@@ -117,7 +116,7 @@ class ClienteLivewire extends Component
 
 
         $this->showModal = false;
-        session()->flash('success', 'Cliente creado correctamente.');
+        session()->flash('success', __('Client created successfully'));
     }
 
 
@@ -131,7 +130,6 @@ class ClienteLivewire extends Component
         $this->mail = $cliente->mail;
         $this->phone = $cliente->phone;
         $this->status = $cliente->status ? 'Activo' : 'Inactivo';
-
 
         $this->showModal = true;
         $this->editMode = true;
@@ -150,13 +148,12 @@ class ClienteLivewire extends Component
                 'address'   => $this->address,
                 'mail'      => $this->mail,
                 'phone'     => $this->phone,
-                //'status'    => $this->status,
                 'cif'       => $this->cif,
             ]);
 
             $this->showModal = false;
 
-            session()->flash('success', 'Cliente actualizado correctamente.');
+            session()->flash('success',  __('Client updated successfully'));
         } catch (\Throwable $th) {
             Log::error('Error en update: ' . $th->getMessage());
             // Log::info('el id del cliete : ' . $this->cliente_id);
@@ -170,7 +167,7 @@ class ClienteLivewire extends Component
         $cliente->update([
             'status'    => !$cliente->status,
         ]);
-        session()->flash('success', 'status actualizado correctamente.');
+        session()->flash('success', ('Status updated successfully'));
     }
 
     public function confirmDelete($id)
@@ -187,7 +184,7 @@ class ClienteLivewire extends Component
 
             $this->closeModal();
 
-            session()->flash('success', 'Cliente eliminado correctamente.');
+            session()->flash('success',  __('client.deleted'));
         } catch (\Throwable $th) {
             Log::error('Error al eliminar destroy cliente: ' . $th->getMessage());
             throw $th;
@@ -204,5 +201,20 @@ class ClienteLivewire extends Component
         $this->deleteMode = false;
         $this->showModal = false; // Cierra el modal
         $this->showCliente = null;
+    }
+
+    public function updatingPerPage()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingfiltroEstatus()
+    {
+        $this->resetPage();
     }
 }
