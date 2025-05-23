@@ -11,7 +11,7 @@ class TareaRequest extends FormRequest
         return true;
     }
 
-    public function rules(): array
+    public function rules($tarea_id = null): array
     {
         $rules = [
             'tarea'      => 'required|string|min:3|max:255',
@@ -21,15 +21,25 @@ class TareaRequest extends FormRequest
             'estatus'    => 'nullable|string|in:Pendiente,Iniciada,Completada',
         ];
 
-        // Si es una tarea nueva, la fecha debe ser mayor o igual a hoy
-        if ($this->isMethod('post')) {
-            $rules['fecha'] = 'required|date|after_or_equal:today';
-        }
 
-        // Si es una tarea existente (edición), la fecha puede ser cualquier valor válido
-        if ($this->isMethod('put') || $this->isMethod('patch')) {
+        // Si es creación (no hay id), la fecha debe ser mayor o igual a hoy
+        if (!$tarea_id) {
+            $rules['fecha'] = 'required|date|after_or_equal:today';
+        } else {
+            // Si es edición (hay id), la fecha puede ser cualquier valor válido
             $rules['fecha'] = 'required|date';
         }
+
+
+        // Si es una tarea nueva, la fecha debe ser mayor o igual a hoy
+       // if ($this->isMethod('post')) {
+         //   $rules['fecha'] = 'required|date|after_or_equal:today';
+        //}
+
+        // Si es una tarea existente (edición), la fecha puede ser cualquier valor válido
+        //if ($this->isMethod('put') || $this->isMethod('patch')) {
+          //  $rules['fecha'] = 'required|date';
+        //}
 
         return $rules;
     }

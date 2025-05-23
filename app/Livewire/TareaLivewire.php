@@ -82,6 +82,7 @@ class TareaLivewire extends Component
             $tareas_pag = $query->paginate($this->perPage);
             return view('livewire.tarea-livewire', compact('tareas_pag',  'isAdmin'));
         } catch (\Throwable $th) {
+            Log::error('Error en update: ' . $th->getMessage());
             throw $th;
         }
     }
@@ -159,8 +160,7 @@ class TareaLivewire extends Component
     public function update()
     {
         try {
-            $this->validate($this->reglasTarea());
-
+            $this->validate($this->reglasTarea($this->tarea_id));
             $tarea = Tarea::findOrFail($this->tarea_id);
 
             $tarea->update([
@@ -194,7 +194,9 @@ class TareaLivewire extends Component
             $tarea->delete();
 
             $this->closeModal();
-           // $this->deleteMode = false;
+
+
+            // $this->deleteMode = false;
             //$this->showModal = false; // Cierra el modal
             //$this->showTarea = null;
 
@@ -212,9 +214,9 @@ class TareaLivewire extends Component
         $this->showTarea = null;
     }
 
-    private function reglasTarea()
+    private function reglasTarea($tarea_id=null)
     {
-        return (new TareaRequest())->rules();
+        return (new TareaRequest())->rules($tarea_id);
     }
 
     public function updatingPerPage()

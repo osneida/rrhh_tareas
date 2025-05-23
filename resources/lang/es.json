@@ -79,5 +79,17 @@
     "Back": "Volver",
     "Task Description":"Descripción de la Tarea ...",
     "Employees": "Empleados",
-    "You do not have permission to access this page.": "No tienes permiso para acceder a esta página."
+    "You do not have permission to access this page.": "No tienes permiso para acceder a esta página.",
+    "New Client": "Nuevo Cliente",
+    "ACTIVE":"Activo",
+    "INACTIVE":"Inactivo",
+    "total Clients": "Total Clientes",
+    "Client Details": "Detalle Cliente",
+    "Confirm Client Deletion": "Confirmar Eliminación del Cliente ",
+    "Address":"Dirección",
+    "Phone":"Teléfono",
+    "Name Client":"Nombre del Cliente",
+    "Edit Client": "Editar Cliente",
+    "Client List": "Lista de Clientes",
+    "Are you sure you want to delete this client?":"¿Está seguro que desea eliminar este cliente?"
 }

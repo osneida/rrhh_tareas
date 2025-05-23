@@ -3,9 +3,9 @@
         <flux:heading size="2xl">{{ __('Task List') }}</flux:heading>
         <div class="flex gap-2">
             <button wire:click="create"
-                class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">{{ __('New Task') }}</button>
+                class="px-4 py-2 bg-blue-400 text-white rounded hover:bg-blue-600 transition">{{ __('New Task') }}</button>
             <button
-                class="px-4 py-2 bg-zinc-500 text-white rounded hover:bg-zinc-600 transition">{{ __('Create Task Group') }}</button>
+                class="px-4 py-2 bg-zinc-400 text-white rounded hover:bg-zinc-500 transition">{{ __('Create Task Group') }}</button>
             <button wire:click="exportExcel"
                 class="px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700 transition">{{ __('Export Excel') }}
             </button>
@@ -106,7 +106,7 @@
                 </button>
 
                 @if ($editMode)
-                    <h2 class="text-xl font-bold mb-4 text-zinc-800 dark:text-zinc-100">Editar Tarea</h2>
+                    <h2 class="text-xl font-bold mb-4 text-zinc-800 dark:text-zinc-100">{{ __('Edit Task') }} </h2>
                 @elseif($showTarea)
                     <h2 class="text-xl font-bold mb-4 text-zinc-800 dark:text-zinc-100">
                         @if ($deleteMode)
@@ -117,9 +117,8 @@
                     </h2>
 
                     <div class="mb-3">
-                        <label class="block text-zinc-700 dark:text-zinc-200 mb-1">{{ __('Task') }}</label>
-                        <input type="text" wire:model="tarea" readonly
-                            class="w-full rounded border bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200" />
+                        <flux:textarea readonly wire:model="tarea" rows="2" maxlength="255"
+                                label="{{ __('Task') }}"  />
                     </div>
                     <div class="mb-3">
                         <label class="block text-zinc-700 dark:text-zinc-200 mb-1">{{ __('Date') }}</label>
@@ -129,6 +128,11 @@
                     <div class="mb-3">
                         <label class="block text-zinc-700 dark:text-zinc-200 mb-1">{{ __('Hours') }}</label>
                         <input type="number" wire:model="horas" readonly
+                            class="w-full rounded border bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="block text-zinc-700 dark:text-zinc-200 mb-1">{{ __('Status') }}</label>
+                        <input type="text" wire:model="estatus" readonly
                             class="w-full rounded border bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200" />
                     </div>
                     <div class="mb-3">
