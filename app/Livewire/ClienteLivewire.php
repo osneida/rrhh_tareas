@@ -17,6 +17,8 @@ class ClienteLivewire extends Component
     public $isAdmin = false;
     public $search = '';
     public $filtroEstatus = '';
+    public $cambioEstatus = 'no';
+
     public $perPage = 10;
 
     public $ordenCampo = 'id';
@@ -47,11 +49,11 @@ class ClienteLivewire extends Component
                         ->orWhere('mail', 'like', '%' . $this->search . '%');
                 });
             }
-
-
+            $this->cambioEstatus = 'no';
             if ($this->filtroEstatus !== '' && $this->filtroEstatus !== null) {
                 $query->where('status', $this->filtroEstatus);
-                 Log::info(" valor del estatus ".$this->filtroEstatus);
+                $this->cambioEstatus = 'si';
+                // Log::info(" valor del estatus ".$this->filtroEstatus);
             }
 
             $query->orderBy($this->ordenCampo, $this->ordenDireccion);

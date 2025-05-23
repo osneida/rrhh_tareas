@@ -49,15 +49,19 @@
                         <td class="px-3 py-2">{{ $cliente->mail }}</td>
                         <td class="px-3 py-2">{{ $cliente->phone }}</td>
                         <td class="px-3 py-2">
-                            <flux:fieldset>
-                                <div class="space-y-3">
-                                    @if ($cliente->status == 1 || $filtroEstatus == 1)
-                                        <flux:switch checked wire:click="cambiar_status({{ $cliente->id }})" />
-                                    @else
-                                        <flux:switch wire:click="cambiar_status({{ $cliente->id }})" />
-                                    @endif
-                                </div>
-                            </flux:fieldset>
+                            @if ($cambioEstatus == 'si')
+                                {{ $cliente->status }}
+                            @else
+                                <flux:fieldset>
+                                    <div class="space-y-3">
+                                        @if ($cliente->status == 1)
+                                            <flux:switch checked wire:click="cambiar_status({{ $cliente->id }})" />
+                                        @else
+                                            <flux:switch wire:click="cambiar_status({{ $cliente->id }})" />
+                                        @endif
+                                    </div>
+                                </flux:fieldset>
+                            @endif
                         </td>
                         <td class="px-3 py-2 flex gap-1">
                             <button wire:click="show({{ $cliente->id }})"
