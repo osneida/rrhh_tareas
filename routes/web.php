@@ -1,12 +1,15 @@
 <?php
 
-use App\Livewire\ClienteLivewire;
-use App\Livewire\EmpleadoLivewire;
+use Illuminate\Support\Facades\Route;
+
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
-use App\Livewire\TareaLivewire;
-use Illuminate\Support\Facades\Route;
+
+use App\Livewire\Admin\TareaLivewire;
+use App\Livewire\Admin\ClienteLivewire;
+use App\Livewire\Admin\UserLivewire;
+
 //use Illuminate\Support\Facades\Session;
 
 Route::get('/', function () {
@@ -31,10 +34,9 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/tareas', TareaLivewire::class)->name('tareas.index');
     Route::get('/clientes', ClienteLivewire::class)->name('clientes.index');
-    Route::get('/empleados', EmpleadoLivewire::class)->name('empleados.index');
+    Route::get('/empleados', UserLivewire::class)->name('empleados.index');
 
 });
-
 
 Route::get('lang/{lang}', function ($lang) {
     if (array_key_exists($lang, config('languages'))) {
@@ -43,7 +45,6 @@ Route::get('lang/{lang}', function ($lang) {
     }
     return redirect()->back();
 })->name('lang');
-
 
 
 require __DIR__ . '/auth.php';

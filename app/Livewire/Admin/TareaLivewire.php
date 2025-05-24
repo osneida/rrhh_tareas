@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Admin;
 
 use App\Http\Requests\TareaRequest;
 use Livewire\Component;
@@ -78,7 +78,7 @@ class TareaLivewire extends Component
             $query = $this->buildQuery();
 
             $tareas_pag = $query->paginate($this->perPage);
-            return view('livewire.tarea-livewire', compact('tareas_pag'));
+            return view('livewire.admin.tarea-livewire', compact('tareas_pag'));
         } catch (\Throwable $th) {
             Log::error('Error en update: ' . $th->getMessage());
             throw $th;

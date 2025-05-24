@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire;
+namespace App\Livewire\Admin;
 
 use App\Http\Requests\ClienteRequest;
 use Illuminate\Support\Facades\Auth;
@@ -60,7 +60,7 @@ class ClienteLivewire extends Component
 
             $clientes = $query->paginate($this->perPage);
 
-            return view('livewire.cliente-livewire', compact('clientes'));
+            return view('livewire.admin.cliente-livewire', compact('clientes'));
         } catch (\Throwable $th) {
             Log::error('Error en update: ' . $th->getMessage());
             throw $th;
