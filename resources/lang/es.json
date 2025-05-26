@@ -85,6 +85,7 @@
     "INACTIVE": "Inactivo",
     "total Clients": "Total Clientes",
     "Client Details": "Detalle Cliente",
+    "total employee": "Total empleados",
     "Confirm Client Deletion": "Confirmar Eliminación del Cliente ",
     "Address": "Dirección",
     "Phone": "Teléfono",
@@ -99,5 +100,8 @@
 
     "Task created successfully": "Tarea creada correctamente.",
     "Task updated successfully": "Tarea actualizada correctamente.",
-    "Task deleted successfully": "Tarea eliminada correctamente."
+    "Task deleted successfully": "Tarea eliminada correctamente.",
+
+    "Employees List":" Lista de Empleados",
+    "New employees":"Nuevo Empleado"
 }

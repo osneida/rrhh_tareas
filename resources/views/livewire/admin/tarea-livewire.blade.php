@@ -1,6 +1,6 @@
 <div class="p-6">
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-        <flux:heading size="2xl">{{ __('Task List') }}</flux:heading>
+        <flux:heading size="xl">{{ __('Task List') }}</flux:heading>
         <div class="flex gap-2">
             <button wire:click="create"
                 class="px-4 py-2 bg-blue-400 text-white rounded hover:bg-blue-600 transition">{{ __('New Task') }}</button>
@@ -46,14 +46,14 @@
         <table class="min-w-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded shadow">
             <thead>
                 <tr class="bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200">
-                    <th wire:click="ordenarPor('id')">#</th>
-                    <th wire:click="ordenarPor('tarea')">{{ __('Task') }}</th>
-                    <th wire:click="ordenarPor('estatus')">{{ __('Status') }}</th>
-                    <th wire:click="ordenarPor('fecha')">{{ __('Date') }}</th>
-                    <th wire:click="ordenarPor('horas')">{{ __('Hours') }}</th>
-                    <th wire:click="ordenarPor('user_id')">{{ __('Employee') }}</th>
-                    <th wire:click="ordenarPor('cliente_id')">{{ __('Client') }}</th>
-                    <th>{{ __('Actions') }}</th>
+                    <th class="px-3 text-center cursor-pointer" wire:click="ordenarPor('id')">#</th>
+                    <th class="px-3 text-left cursor-pointer" wire:click="ordenarPor('tarea')">{{ __('Task') }}</th>
+                    <th class="text-left px-4 cursor-pointer" wire:click="ordenarPor('estatus')">{{ __('Status') }}</th>
+                    <th class="text-left px-4 cursor-pointer" wire:click="ordenarPor('fecha')">{{ __('Date') }}</th>
+                    <th class="text-left px-4 cursor-pointer" wire:click="ordenarPor('horas')">{{ __('Hours') }}</th>
+                    <th class="text-left px-4 cursor-pointer" wire:click="ordenarPor('user_id')">{{ __('Employee') }}</th>
+                    <th class="text-left px-4 cursor-pointer" wire:click="ordenarPor('cliente_id')">{{ __('Client') }}</th>
+                    <th class="text-left px-4 cursor-pointer">{{ __('Actions') }}</th>
                 </tr>
             </thead>
             <tbody>

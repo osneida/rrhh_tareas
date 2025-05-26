@@ -6,34 +6,51 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
-
+use Livewire\WithPagination;
 
 class UserLivewire extends Component
 {
+    use WithPagination;
 
-    public string $name = '';
-
-    public string $email = '';
-
-    public string $password = '';
-
-    public string $password_confirmation = '';
-
-    public $isAdmin = false;
-    public $filtroEstatus = '';
-    public $cambioEstatus = 'no';
-    public $perPage = 10;
-    public $ordenCampo = 'id';
-    public $ordenDireccion = 'desc';
     public $search = '';
+    public $status = '';
+    public $sortField = 'name';
+    public $sortDirection = 'asc';
+    public $isAdmin = false;
+    public $perPage = 10;
 
-    public $showUser;
-    public $showModal = false;
-    public $editMode = false;
-    public $deleteMode = false;
+    protected $updatesQueryString = [
+        ['search' => ['except' => '']],
+        ['status' => ['except' => '']],
+        ['sortField' => ['except' => 'name']],
+        ['sortDirection' => ['except' => 'asc']],
+    ];
 
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingStatus()
+    {
+        $this->resetPage();
+    }
+
+    public function sortBy($field)
+    {
+        if ($this->sortField === $field) {
+            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortField = $field;
+            $this->sortDirection = 'asc';
+        }
+    }
+
+    public function toggleStatus(User $user)
+    {
+        $user->status = !$user->status;
+        $user->save();
+    }
 
     public function mount()
     {
@@ -42,73 +59,23 @@ class UserLivewire extends Component
 
     public function render()
     {
-        try {
-            $query = User::query();
+        $users = User::query()
+            ->when(
+                $this->search,
+                fn($q) =>
+                $q->where(function ($q) {
+                    $q->where('name', 'like', "%{$this->search}%")
+                        ->orWhere('email', 'like', "%{$this->search}%");
+                })
+            )
+            ->when($this->status !== '', function ($q) {
+                $q->where('status', (int)$this->status);
+            })
+            ->orderBy($this->sortField, $this->sortDirection)
+            ->paginate($this->perPage);
 
-            if ($this->search) {
-                $query->where(function ($q) {
-                    $q->where('name', 'like', '%' . $this->search . '%')
-                        ->orWhere('email', 'like', '%' . $this->search . '%');
-                });
-            }
-            if ($this->filtroEstatus !== '' && $this->filtroEstatus !== null) {
-                $query->where('status', $this->filtroEstatus);
-            }
-
-            $query->orderBy($this->ordenCampo, $this->ordenDireccion);
-
-            $users = $query->paginate($this->perPage);
-
-            return view('livewire.admin.user-livewire', compact('users'));
-        } catch (\Throwable $th) {
-            Log::error('Error en update: ' . $th->getMessage());
-            throw $th;
-        }
-    }
-
-
-    public function register(): void
-    {
-        $validated = $this->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
-            'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
+        return view('livewire.admin.user-livewire', [
+            'users' => $users,
         ]);
-
-        $validated['password'] = Hash::make($validated['password']);
-
-        User::create($validated);
-
-        $this->showModal = false;
-        session()->flash('success', __('Client created successfully'));
     }
-
-
-
-
-    public function closeModal()
-    {
-        $this->deleteMode = false;
-        $this->showModal = false; // Cierra el modal
-        $this->showUser = null;
-    }
-
-
-
-
-    /*
-        public function updatingSearch()
-    {
-        $this->resetPage();
-    }
-
-      public function updatingPerPage()
-    {
-        $this->resetPage();
-    }
-
-  public function updatingfiltroEstatus()
-    {
-        $this->resetPage();
-    }*/
 }

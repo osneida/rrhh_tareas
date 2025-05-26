@@ -1,6 +1,6 @@
 <div class="p-6">
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-        <flux:heading size="2xl">{{ __('Client List') }}</flux:heading>
+        <flux:heading size="xl">{{ __('Client List') }}</flux:heading>
         <div class="flex gap-2">
             <button wire:click="create"
                 class="px-4 py-2 bg-blue-400 text-white rounded hover:bg-blue-600 transition">{{ __('New Client') }}</button>
@@ -28,40 +28,43 @@
         <table class="min-w-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded shadow">
             <thead>
                 <tr class="bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200">
-                    <th wire:click="ordenarPor('id')">#</th>
-                    <th wire:click="ordenarPor('name')">{{ __('Client') }}</th>
-                    <th wire:click="ordenarPor('address')">{{ __('address') }}</th>
-                    <th wire:click="ordenarPor('cif')">{{ __('cif') }}</th>
-                    <th wire:click="ordenarPor('mail')">{{ __('mail') }}</th>
-                    <th wire:click="ordenarPor('phone')">{{ __('phone') }}</th>
-                    <th wire:click="ordenarPor('status')">{{ __('status') }}</th>
+                    <th class="text-left px-4 py-2 cursor-pointer" wire:click="ordenarPor('id')"># </th>
+                    <th class="text-left px-4 py-2 cursor-pointer" wire:click="ordenarPor('name')">{{ __('Client') }}
+                    </th>
+                    <th class="text-left px-4 py-2 cursor-pointer" wire:click="ordenarPor('address')">
+                        {{ __('address') }}</th>
+                    <th class="text-left px-4 py-2 cursor-pointer" wire:click="ordenarPor('cif')">{{ __('cif') }}
+                    </th>
+                    <th class="text-left px-4 py-2 cursor-pointer" wire:click="ordenarPor('mail')">{{ __('mail') }}
+                    </th>
+                    <th class="text-left px-4 py-2 cursor-pointer" wire:click="ordenarPor('phone')">{{ __('phone') }}
+                    </th>
+                    <th class="text-left px-4 py-2 cursor-pointer" wire:click="ordenarPor('status')">
+                        {{ __('status') }}</th>
                     <th>{{ __('Actions') }}</th>
                 </tr>
             </thead>
             <tbody>
 
-                @forelse($clientes as $i => $cliente)
-                    <tr class="border-t border-zinc-200 dark:border-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-800">
-                        <td class="px-3 py-2">{{ $i + 1 }}</td>
+                @forelse($clientes as $cliente)
+                    <tr wire:key="cliente-{{ $cliente->id }}"
+                        class="border-t border-zinc-200 dark:border-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-800">
+                        <td class="px-3 py-2">{{ $loop->iteration }}</td>
                         <td class="px-3 py-2">{{ $cliente->name }}</td>
                         <td class="px-3 py-2">{{ $cliente->address }}</td>
                         <td class="px-3 py-2">{{ $cliente->cif }}</td>
                         <td class="px-3 py-2">{{ $cliente->mail }}</td>
                         <td class="px-3 py-2">{{ $cliente->phone }}</td>
                         <td class="px-3 py-2">
-                            @if ($cambioEstatus == 'si')
-                                {{ $cliente->status }}
-                            @else
-                                <flux:fieldset>
-                                    <div class="space-y-3">
-                                        @if ($cliente->status == 1)
-                                            <flux:switch checked wire:click="cambiar_status({{ $cliente->id }})" />
-                                        @else
-                                            <flux:switch wire:click="cambiar_status({{ $cliente->id }})" />
-                                        @endif
-                                    </div>
-                                </flux:fieldset>
-                            @endif
+                            <flux:fieldset>
+                                <div class="space-y-3">
+                                    @if ($cliente->status == 1)
+                                        <flux:switch checked wire:click="cambiar_status({{ $cliente->id }})" title="Activo"/>
+                                    @else
+                                        <flux:switch wire:click="cambiar_status({{ $cliente->id }})" title="Inactivo"/>
+                                    @endif
+                                </div>
+                            </flux:fieldset>
                         </td>
                         <td class="px-3 py-2 flex gap-1">
                             <button wire:click="show({{ $cliente->id }})"
