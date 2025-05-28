@@ -7,21 +7,24 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-5 gap-5 mb-6">
-        <flux:input wire:model.live="search" type="search" icon="magnifying-glass" placeholder="{{ __('Search ...') }}" />
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-5 mb-4">
+        <div class="flex gap-4">
 
-        <flux:select wire:model.live="filtroEstatus">
-            <option value="">{{ __('All Statuses') }}</option>
-            <option value="1">{{ __('ACTIVE') }}</option>
-            <option value="0">{{ __('INACTIVE') }}</option>
-        </flux:select>
+            <flux:input wire:model.live="search" type="search" icon="magnifying-glass"
+                placeholder="{{ __('Search ...') }}" />
 
-        <flux:select wire:model.live="perPage">
-            <option value="5">5 {{ __('per page') }}</option>
-            <option value="10">10 {{ __('per page') }}</option>
-            <option value="25">25 {{ __('per page') }}</option>
-            <option value="50">50 {{ __('per page') }}</option>
-        </flux:select>
+            <select wire:model.live="filtroEstatus" class="border rounded ml-20 px-2 py-1">
+                <option value="">{{ __('All Statuses') }}</option>
+                @foreach ($selectStatus as $statu)
+                    <option value="{{ $statu->value }}">{{ $statu->label() }}</option>
+                @endforeach
+            </select>
+            <select wire:model.live="perPage" class="border rounded ml-20 px-2 py-1">
+                @foreach ($paginacion as $page)
+                    <option value="{{ $page->value }}">{{ $page->label() }} {{ __('per page') }}</option>
+                @endforeach
+            </select>
+        </div>
     </div>
 
     <div class="overflow-x-auto">

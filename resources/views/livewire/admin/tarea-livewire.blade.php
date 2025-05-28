@@ -12,15 +12,14 @@
 
         </div>
     </div>
-
     <div class="grid grid-cols-1 md:grid-cols-5 gap-5 mb-6">
         <flux:input wire:model.live="search" type="search" icon="magnifying-glass"
             placeholder="{{ __('Search task or date...') }}" />
         <flux:select wire:model.live="filtroEstatus">
             <option value="">{{ __('All Statuses') }}</option>
-            <option value="Pendiente">{{ __('Pending') }}</option>
-            <option value="Iniciada">{{ __('Started') }}</option>
-            <option value="Completada">{{ __('Completed') }}</option>
+            @foreach ($selectEstatusTarea as $statu)
+                <option value="{{ $statu->value }}">{{ $statu->label() }}</option>
+            @endforeach
         </flux:select>
         <flux:select wire:model.live="filtroEmpleado">
             <option value="">{{ __('All Employees') }}</option>
@@ -35,10 +34,9 @@
             @endforeach
         </flux:select>
         <flux:select wire:model.live="perPage">
-            <option value="5">5 {{ __('per page') }}</option>
-            <option value="10">10 {{ __('per page') }}</option>
-            <option value="25">25 {{ __('per page') }}</option>
-            <option value="50">50 {{ __('per page') }}</option>
+            @foreach ($paginacion as $page)
+                <option value="{{ $page->value }}">{{ $page->label() }} {{ __('per page') }}</option>
+            @endforeach
         </flux:select>
     </div>
 

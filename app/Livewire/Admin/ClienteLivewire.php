@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Log;
 use Livewire\WithPagination;
 use Livewire\Component;
 use App\Models\Cliente;
+use App\Enums\StatusEnum;
+use App\Enums\PaginacionEnum;
 
 class ClienteLivewire extends Component
 {
@@ -17,10 +19,8 @@ class ClienteLivewire extends Component
     public $isAdmin = false;
     public $search = '';
     public $filtroEstatus = '';
-    public $cambioEstatus = 'no';
 
-    public $perPage = 10;
-
+    public $perPage;
     public $ordenCampo = 'id';
     public $ordenDireccion = 'desc';
 
@@ -29,10 +29,15 @@ class ClienteLivewire extends Component
     public $editMode = false;
     public $deleteMode = false;
 
+    public $selectStatus;
+    public $paginacion;
 
     public function mount()
     {
         $this->isAdmin = Auth::user() && Auth::user()->role === 'admin';
+        $this->selectStatus = StatusEnum::cases();
+        $this->paginacion = PaginacionEnum::cases();
+        $this->perPage = PaginacionEnum::Diez->value; // Default pagination value
     }
 
     public function render()
@@ -49,11 +54,9 @@ class ClienteLivewire extends Component
                         ->orWhere('mail', 'like', '%' . $this->search . '%');
                 });
             }
-            $this->cambioEstatus = 'no';
+
             if ($this->filtroEstatus !== '' && $this->filtroEstatus !== null) {
                 $query->where('status', $this->filtroEstatus);
-                $this->cambioEstatus = 'si';
-                // Log::info(" valor del estatus ".$this->filtroEstatus);
             }
 
             $query->orderBy($this->ordenCampo, $this->ordenDireccion);

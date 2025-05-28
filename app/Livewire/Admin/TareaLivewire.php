@@ -12,6 +12,8 @@ use App\Models\User;
 use App\Models\Cliente;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use App\Enums\EstatusTareaEnum;
+use App\Enums\PaginacionEnum;
 
 class TareaLivewire extends Component
 {
@@ -34,13 +36,21 @@ class TareaLivewire extends Component
     public $allEmpleados = [];
     public $allClientes = [];
     public $isAdmin = false;
-    public $perPage = 10;
+    public $perPage;
+
+    public $selectStatus;
+    public $paginacion;
+    public $selectEstatusTarea;
 
     public function mount()
     {
         $this->allEmpleados = User::select('id', 'name')->where('status', 1)->orderBy('name')->get();
         $this->allClientes  = Cliente::select('id', 'name')->where('status', 1)->orderBy('name')->get();
         $this->isAdmin = Auth::user() && Auth::user()->role === 'admin';
+
+        $this->paginacion = PaginacionEnum::cases();
+        $this->perPage = PaginacionEnum::Diez->value; // Default pagination value
+        $this->selectEstatusTarea = EstatusTareaEnum::cases();
     }
 
     private function buildQuery()
@@ -212,7 +222,7 @@ class TareaLivewire extends Component
         $this->showTarea = null;
     }
 
-    private function reglasTarea($tarea_id=null)
+    private function reglasTarea($tarea_id = null)
     {
         return (new TareaRequest())->rules($tarea_id);
     }
