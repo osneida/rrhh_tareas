@@ -3,28 +3,28 @@
         <flux:heading size="xl">{{ __('Employees List') }}</flux:heading>
         <div class="flex gap-2">
             <button wire:click="create"
-                class="px-4 py-2 bg-blue-400 text-white rounded hover:bg-blue-600 transition">{{ __('New employees') }}</button>
+                class="px-4 py-2 bg-blue-400 text-white rounded hover:bg-blue-600 transition">{{ __('New employee') }}</button>
         </div>
     </div>
 
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-5 mb-4">
         <div class="flex gap-4">
-            <input type="text" wire:model.live="search" placeholder="Buscar por nombre o email "
-                class="border rounded px-2 py-1 " />
-            <select wire:model.live="status" class="border rounded  ml-20 px-2 py-1">
-                <option value="">{{  __('All Statuses')  }}</option>
-                <option value="1">Activos</option>
-                <option value="0">Inactivos</option>
+
+            <flux:input wire:model.live="search" type="search" icon="magnifying-glass"
+                placeholder="{{ __('Search per name o email ...') }}" />
+
+            <select wire:model.live="status" class="border rounded ml-20 px-2 py-1">
+                <option value="">{{ __('All Statuses') }}</option>
+                @foreach ($selectStatus as $statu)
+                    <option value="{{ $statu->value }}">{{ $statu->label() }}</option>
+                @endforeach
             </select>
-            <select wire:model.live="perPage" class="border rounded ml-20 py-1">
-                <option value="5">5 {{ __('per page') }}</option>
-                <option value="10">10 {{ __('per page') }}</option>
-                <option value="25">25 {{ __('per page') }}</option>
-                <option value="50">50 {{ __('per page') }}</option>
+            <select wire:model.live="perPage" class="border rounded ml-20 px-2 py-1">
+                @foreach ($paginacion as $page)
+                    <option value="{{ $page->value }}">{{ $page->label() }} {{ __('per page') }}</option>
+                @endforeach
             </select>
         </div>
-
-
     </div>
 
     <div class="overflow-x-auto">
@@ -97,6 +97,61 @@
         </span>
     </div>
 
+    @if (session()->has('success'))
+        <div class="mt-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+            {{ session('success') }}
+        </div>
+    @endif
 
+
+    @if (session()->has('error'))
+        <div class="mt-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+            {{ session('error') }}
+        </div>
+    @endif
+    {{-- colocando el modal --}}
+
+    @if ($showModal)
+        <div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+            <div class="bg-white dark:bg-zinc-900 rounded-lg shadow-xl w-full max-w-lg p-6 relative">
+                <button wire:click="closeModal"
+                    class="absolute top-2 right-2 text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 text-2xl font-bold focus:outline-none">
+                    &times;
+                </button>
+                <h2 class="text-xl font-bold mb-4 text-zinc-800 dark:text-zinc-100">
+                    {{ __('Confirm Employee Deletion') }}
+                </h2>
+                <div class="mb-3">
+                    <label class="block text-zinc-700 dark:text-zinc-200 mb-1"
+                        maxlength="100">{{ __('Name') }}</label>
+                    <input readonly type="text" wire:model="name"
+                        class="w-full rounded border bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200" />
+                </div>
+                <div class="mb-3">
+                    <label class="block text-zinc-700 dark:text-zinc-200 mb-1"
+                        maxlength="100">{{ __('Email') }}</label>
+                    <input readonly type="text" wire:model="email"
+                        class="w-full rounded border bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200" />
+                </div>
+                <label class="block text-zinc-700 dark:text-zinc-200 mb-1">{{ __('Role') }}</label>
+                <div class="mb-3 flex flex-row gap-6">
+                    <input readonly type="text" wire:model="role"
+                        class="w-full rounded border bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200" />
+                </div>
+
+                <div class="text-red-600 font-semibold mb-4">
+                    {{ __('Are you sure you want to delete this employee?') }}
+                </div>
+                <div class="flex gap-2">
+                    <button wire:click="destroy({{ $user_id }})"
+                        class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">{{ __('Delete') }}</button>
+                    <button wire:click="closeModal"
+                        class="px-4 py-2 bg-zinc-500 text-white rounded hover:bg-zinc-600">{{ __('Cancel') }}</button>
+                </div>
+
+            </div>
+        </div>
+    @endif
+    {{-- fin del modal --}}
 
 </div>

@@ -180,6 +180,13 @@ class ClienteLivewire extends Component
     {
         try {
             $cliente = Cliente::findOrFail($id);
+
+            if ($cliente->tareas()->count() > 0) {
+                $this->closeModal();
+                session()->flash('error', __('The client cannot be deleted because he has tasks assigned to him, you can change the status'));
+                return;
+            }
+
             $cliente->delete();
 
             $this->closeModal();
