@@ -9,6 +9,7 @@ use App\Models\Tarea;
 use App\Models\User;
 use App\Models\Cliente;
 use Livewire\Livewire;
+use App\Livewire\Admin\TareaLivewire;
 
 class TareaTest extends TestCase
 {
@@ -27,7 +28,7 @@ class TareaTest extends TestCase
 
         $this->actingAs($user);
 
-        Livewire::test(\App\Livewire\TareaLivewire::class)
+        Livewire::test(TareaLivewire::class)
             ->set('tarea', 'Nueva tarea')
             ->set('estatus', 'Pendiente')
             ->set('fecha', now()->addDay()->toDateString())
@@ -51,7 +52,7 @@ class TareaTest extends TestCase
 
         $this->actingAs($user);
 
-        Livewire::test(\App\Livewire\TareaLivewire::class)
+        Livewire::test(TareaLivewire::class)
             ->set('tarea', 'ab')
             ->set('estatus', 'Pendiente')
             ->set('fecha', now()->addDay()->toDateString())
@@ -70,7 +71,7 @@ class TareaTest extends TestCase
 
         $this->actingAs($user);
 
-        Livewire::test(\App\Livewire\TareaLivewire::class)
+        Livewire::test(TareaLivewire::class)
             ->set('tarea', 'abc')
             ->set('estatus', 'Pendiente')
             ->set('fecha', now()->addDay()->toDateString())
@@ -96,7 +97,7 @@ class TareaTest extends TestCase
 
         $tareaStr = str_repeat('a', 255);
 
-        Livewire::test(\App\Livewire\TareaLivewire::class)
+        Livewire::test(TareaLivewire::class)
             ->set('tarea', $tareaStr)
             ->set('estatus', 'Pendiente')
             ->set('fecha', now()->addDay()->toDateString())
@@ -122,7 +123,7 @@ class TareaTest extends TestCase
 
         $tareaStr = str_repeat('a', 256);
 
-        Livewire::test(\App\Livewire\TareaLivewire::class)
+        Livewire::test(TareaLivewire::class)
             ->set('tarea', $tareaStr)
             ->set('estatus', 'Pendiente')
             ->set('fecha', now()->addDay()->toDateString())

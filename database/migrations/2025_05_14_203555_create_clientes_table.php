@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('cif')->nullable()->unique();
             $table->string('mail')->nullable()->unique();
             $table->string('phone')->nullable()->unique();
-            $table->boolean('status')->default(StatusEnum::ACTIVE)->comment(StatusEnum::INACTIVE . ' = Inactivo, ' . StatusEnum::ACTIVE . ' = Activo');
+            $table->boolean('status')->default(StatusEnum::ACTIVE);//->comment(StatusEnum::INACTIVE . ' = Inactivo, ' . StatusEnum::ACTIVE . ' = Activo');
             $table->timestamps();
         });
     }
