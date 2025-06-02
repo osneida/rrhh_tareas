@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Cliente;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Tarea extends Model
 {
@@ -19,7 +20,8 @@ class Tarea extends Model
         'user_id',
         'cliente_id',
         'horas',
-        'observacion'
+        'observacion',
+        'grupo_tarea_id'
     ];
 
     public function user(): BelongsTo
@@ -30,5 +32,10 @@ class Tarea extends Model
     public function cliente(): BelongsTo
     {
         return $this->belongsTo(Cliente::class);
+    }
+
+    public function grupo(): HasMany
+    {
+        return $this->hasMany(GrupoTarea::class);
     }
 }

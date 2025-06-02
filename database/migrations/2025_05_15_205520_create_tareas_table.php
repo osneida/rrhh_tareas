@@ -19,6 +19,9 @@ return new class extends Migration
             $table->integer('horas')->default(1);
             $table->string('observacion')->nullable();
 
+            $table->unsignedBigInteger('grupo_tarea_id')->nullable()->index();
+            $table->foreign('grupo_tarea_id')->references('id')->on('grupo_tareas')->onDelete('set null');
+
             $table->unsignedBigInteger('user_id')->nullable()->index();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
 

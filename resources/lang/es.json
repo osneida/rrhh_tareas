@@ -100,6 +100,7 @@
     "Client deleted successfully": "Cliente eliminado correctamente.",
 
     "Task created successfully": "Tarea creada correctamente.",
+    "Tasks created successfully": "Tareas creadas correctamente.",
     "Task updated successfully": "Tarea actualizada correctamente.",
     "Task deleted successfully": "Tarea eliminada correctamente.",
 
@@ -120,9 +121,23 @@
     "Roles": "Roles",
     "Administrator": "Administrador",
     "Search per name o email ...": "Buscar por nombre o correo electrónico ...",
-    "User created successfully":"Empleado creado correctamente",
-    "User updated successfully":"Empleado actualizado correctamente",
-    "You cannot delete your own user":"No puedes eliminar tu propio usuario",
-    "The user cannot be deleted because he has tasks assigned to him, you can change the status":"No se puede eliminar el usuario porque tiene tareas asignadas, le puedes cambiar el estatus",
-    "The client cannot be deleted because he has tasks assigned to him, you can change the status":"No se puede eliminar el cliente porque tiene tareas asignadas, le puedes cambiar el estatus"
+    "User created successfully": "Empleado creado correctamente",
+    "User updated successfully": "Empleado actualizado correctamente",
+    "You cannot delete your own user": "No puedes eliminar tu propio usuario",
+    "The user cannot be deleted because he has tasks assigned to him, you can change the status": "No se puede eliminar el usuario porque tiene tareas asignadas, le puedes cambiar el estatus",
+    "The client cannot be deleted because he has tasks assigned to him, you can change the status": "No se puede eliminar el cliente porque tiene tareas asignadas, le puedes cambiar el estatus",
+    "Tasks by Group": "Tareas por Grupo",
+    "New Tasks": "Nuevas Tareas",
+    "Group Description": "Descripción del Grupo de Tarea",
+    "New Group Task": "Nuevo Grupo de Tareas",
+    "Start date": "Fecha inicio",
+    "End date": "Fecha fin",
+    "Select the days": "Seleccione los días",
+    "Monday": "Lunes",
+    "Tuesday": "Martes",
+    "Wednesday": "Miércoles",
+    "Thursday": "Jueves",
+    "Friday": "Viernes",
+    "Saturday": "Sábado",
+    "Sunday": "Domingo"
 }

@@ -20,7 +20,7 @@ class TareaLivewire extends Component
     use WithPagination;
 
     public $tareas, $tarea, $tarea_id;
-    public $estatus, $fecha, $horas, $user_id, $cliente_id, $observacion;
+    public $estatus, $fecha, $horas = 1, $user_id, $cliente_id, $observacion;
 
     //  PROPIEDADES PARA FILTROS Y ORDEN
     public $search = '';

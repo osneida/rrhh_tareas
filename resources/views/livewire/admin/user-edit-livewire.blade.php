@@ -4,7 +4,7 @@
     @else
         <h2 class="text-xl font-bold mb-4 text-zinc-800 dark:text-zinc-100">{{ __('New employee') }}</h2>
     @endif
-    <div class="bg-white dark:bg-zinc-900 rounded-lg shadow-xl w-full  p-6 relative">
+    <div class="bg-white dark:bg-zinc-900 rounded-lg shadow-xl w-full max-w-2xl p-6 relative">
         <form wire:submit.prevent="{{ $editMode ? 'update' : 'store' }}">
             <div class="mb-3">
                 <label class="block text-zinc-700 dark:text-zinc-200 mb-1">{{ __('Name') }}</label>
