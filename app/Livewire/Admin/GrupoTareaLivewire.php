@@ -45,7 +45,10 @@ class GrupoTareaLivewire extends Component
 
     protected $updatesQueryString = [
         ['search'  => ['except' => '']],
-        ['perPage' => ['except' => PaginacionEnum::Diez->value]]
+        ['perPage' => ['except' => PaginacionEnum::Diez->value]],
+        ['sortField' => ['except' => 'id']],
+        ['sortDirection' => ['except' => 'desc']]
+
     ];
 
     public function render()
@@ -106,7 +109,10 @@ class GrupoTareaLivewire extends Component
         $diasSel = is_array($this->dias) ? $this->dias : [$this->dias];
 
         $grupo_tarea = GrupoTarea::create([
-            'descripcion' => $this->descripcion
+            'descripcion' => $this->descripcion,
+            'fecha_inicio' => $this->fecha_inicio,
+            'fecha_fin' => $this->fecha_fin,
+            'dias' => $diasSel
         ]);
 
         // Obtener todas las fechas de los días seleccionados
@@ -137,12 +143,9 @@ class GrupoTareaLivewire extends Component
         $this->showTarea = $grupo = GrupoTarea::findOrFail($id);
         $this->descripcion = $grupo->descripcion;
         $this->grupo_tarea_id = $grupo->id;
-
-        // Paginar tareas relacionadas
-        // $this->showTarea = $grupo->tareas()->orderBy('fecha', 'desc')->paginate(10);
-
-
-        // dd($grupo_tarea->tareas[0]['fecha']);
+        $this->fecha_inicio = $grupo->fecha_inicio;
+        $this->fecha_fin = $grupo->fecha_fin;
+        $this->dias = $grupo->dias;
 
         $this->editMode = false;
         $this->deleteMode = false;

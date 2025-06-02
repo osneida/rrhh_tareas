@@ -11,6 +11,9 @@ return new class extends Migration
         Schema::create('grupo_tareas', function (Blueprint $table) {
             $table->id();
             $table->string('descripcion');
+            $table->date('fecha_inicio');
+            $table->date('fecha_fin');
+            $table->string('dias');
             $table->timestamps();
         });
     }

@@ -8,7 +8,10 @@ use App\Models\Tarea;
 
 class GrupoTarea extends Model
 {
-    protected $fillable = ['descripcion'];
+    protected $fillable = ['descripcion','fecha_inicio', 'fecha_fin', 'dias'];
+    protected $casts = [
+        'dias' => 'array',
+    ];
 
     public function tareas(): HasMany
     {

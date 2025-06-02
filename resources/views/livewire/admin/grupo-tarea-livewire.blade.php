@@ -54,8 +54,6 @@
                                 @if ($isAdmin)
                                     <button wire:click="show({{ $tarea->id }})"
                                         class="px-2 py-1 bg-emerald-500 text-white rounded hover:bg-emerald-600 text-xs">Ver</button>
-                                    <button wire:click="edit({{ $tarea->id }})"
-                                        class="px-2 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 text-xs">Editar</button>
                                     <button wire:click="confirmDelete({{ $tarea->id }})"
                                         class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs">Eliminar</button>
                                 @endif
@@ -203,12 +201,21 @@
 
     @if ($showTarea)
         <div class="bg-white dark:bg-zinc-900 rounded-lg shadow-xl w-full  p-6 relative">
-            <h2 class="text-xl font-bold mb-4 text-zinc-800 dark:text-zinc-100">{{ __('Task Details') }}</h2>
+            <h2 class="text-xl font-bold mb-4 text-zinc-800 dark:text-zinc-100">{{ __('Task Group Details') }}</h2>
             <div class="mb-3">
-                <p><strong>{{ __('Description') }}:</strong> {{ $descripcion }}</p>
+                <p><strong>{{ __('Description') }} :</strong> {{ $descripcion }}</p>
+                <p><strong>{{ __('Start Date') }} :</strong> {{ $fecha_inicio }} | <strong>{{ __('End Date') }}
+                        :</strong> {{ $fecha_fin }}</p>
+                <p></p>
+                <strong>{{ __('Days') }} :</strong>
+                {{ implode(', ', collect($dias)->map(fn($d) => \App\Enums\DiasEnum::tryFrom($d)?->label() ?? $d)->toArray()) }}
+                <p><strong>{{ __('Client') }} :</strong>
+                    {{ $tareasPaginadas[0]->cliente ? $tareasPaginadas[0]->cliente->name : 'N/A' }}</p>
+
             </div>
             <div class="mb-3">
                 <div class="overflow-x-auto">
+                    <h2 class="text-xl font-bold mb-4 text-zinc-800 dark:text-zinc-100">{{ __('Task List') }}</h2>
                     <table
                         class="min-w-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded shadow">
                         <thead>
@@ -224,8 +231,7 @@
                                     {{ __('Hours') }}</th>
                                 <th class="text-left px-4 cursor-pointer" wire:click="ordenarPor('user_id')">
                                     {{ __('Employee') }}</th>
-                                <th class="text-left px-4 cursor-pointer" wire:click="ordenarPor('cliente_id')">
-                                    {{ __('Client') }}</th>
+
                                 <th class="text-left px-4 cursor-pointer">{{ __('Actions') }}</th>
                             </tr>
                         </thead>
@@ -239,7 +245,6 @@
                                     <td class="px-3 py-2">{{ $tarea->fecha }}</td>
                                     <td class="px-3 py-2">{{ $tarea->horas }}</td>
                                     <td class="px-3 py-2">{{ $tarea->user->name ?? '-' }}</td>
-                                    <td class="px-3 py-2">{{ $tarea->cliente->name ?? '-' }}</td>
                                     <td class="px-3 py-2 flex gap-1">
 
                                         @if ($isAdmin)
