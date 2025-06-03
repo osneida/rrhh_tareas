@@ -6,6 +6,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Enums\PaginacionEnum;
 use App\Enums\DiasEnum;
+use App\Http\Requests\TareaGrupoRequest;
 use App\Http\Requests\TareaRequest;
 use App\Models\Cliente;
 use App\Models\GrupoTarea;
@@ -36,6 +37,7 @@ class GrupoTareaLivewire extends Component
     public $createMode = false;
     public $deleteMode = false;
     public $dashboard  = true;
+    public $editTarea = false;
 
     public $showTarea  = null;
 
@@ -104,7 +106,7 @@ class GrupoTareaLivewire extends Component
 
     public function store()
     {
-        // $this->validate($this->reglasTarea());
+        $this->validate($this->reglasGrupoTarea());
         $userIds = is_array($this->user_id) ? $this->user_id : [$this->user_id];
         $diasSel = is_array($this->dias) ? $this->dias : [$this->dias];
 
@@ -153,6 +155,50 @@ class GrupoTareaLivewire extends Component
         $this->createMode = false;
     }
 
+    public function edit($id)
+    {
+        $tarea = Tarea::findOrFail($id);
+        $this->tarea_id = $tarea->id;
+        $this->tarea = $tarea->tarea;
+        $this->estatus = $tarea->estatus;
+        $this->fecha = $tarea->fecha;
+        $this->horas = $tarea->horas;
+        $this->cliente_id = $tarea->cliente_id;
+        $this->user_id = $tarea->user_id;
+        $this->observacion = $tarea->observacion;
+        $this->closeModal();
+        $this->editTarea = true;
+        $this->dashboard = false;
+    }
+
+    public function update()
+    { // Actualizar tarea existente
+        try {
+            $this->validate($this->reglasTarea($this->tarea_id));
+            $tarea = Tarea::findOrFail($this->tarea_id);
+            $id = $tarea->grupo_tarea_id; // Mantener el grupo de tarea
+            $tarea->update([
+                'tarea'      => $this->tarea,
+                'estatus'    => $this->estatus,
+                'fecha'      => $this->fecha,
+                'horas'      => $this->horas,
+                'cliente_id' => $this->cliente_id,
+                'user_id'    => $this->user_id ?: null,
+                'observacion' => $this->observacion,
+            ]);
+
+            $this->editTarea = false;
+            $this->dashboard = false;
+            $this->show($id);
+
+            session()->flash('success', __('Task updated successfully'));
+        } catch (\Throwable $th) {
+            Log::error('Error en update: ' . $th->getMessage());
+            throw $th;
+        }
+    }
+
+
     public function sortBy($field)
     {
         if ($this->sortField === $field) {
@@ -166,6 +212,11 @@ class GrupoTareaLivewire extends Component
     private function reglasTarea($tarea_id = null)
     {
         return (new TareaRequest())->rules($tarea_id);
+    }
+
+    private function reglasGrupoTarea()
+    {
+        return (new TareaGrupoRequest())->rules();
     }
 
     public function obtenerFechasPorDias($fecha_inicio, $fecha_fin, $diasSeleccionados)
@@ -190,5 +241,14 @@ class GrupoTareaLivewire extends Component
         $this->createMode = false;
         $this->showTarea = null;
         $this->dashboard = true;
+    }
+
+    public function closeModalGrupo()
+    {
+        $this->reset(['tarea', 'estatus', 'fecha', 'horas', 'cliente_id', 'user_id', 'observacion',  'tarea_id']);
+
+        $this->editTarea = false;
+        $this->dashboard = false;
+        $this->show($this->grupo_tarea_id);
     }
 }

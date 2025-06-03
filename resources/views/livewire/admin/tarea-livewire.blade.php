@@ -4,8 +4,6 @@
         <div class="flex gap-2">
             <button wire:click="create"
                 class="px-4 py-2 bg-blue-400 text-white rounded hover:bg-blue-600 transition">{{ __('New Task') }}</button>
-            <button
-                class="px-4 py-2 bg-zinc-400 text-white rounded hover:bg-zinc-500 transition">{{ __('Create Task Group') }}</button>
             <button wire:click="exportExcel"
                 class="px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700 transition">{{ __('Export Excel') }}
             </button>
@@ -46,11 +44,14 @@
                 <tr class="bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200">
                     <th class="px-3 text-center cursor-pointer" wire:click="ordenarPor('id')">#</th>
                     <th class="px-3 text-left cursor-pointer" wire:click="ordenarPor('tarea')">{{ __('Task') }}</th>
-                    <th class="text-left px-4 cursor-pointer" wire:click="ordenarPor('estatus')">{{ __('Status') }}</th>
+                    <th class="text-left px-4 cursor-pointer" wire:click="ordenarPor('estatus')">{{ __('Status') }}
+                    </th>
                     <th class="text-left px-4 cursor-pointer" wire:click="ordenarPor('fecha')">{{ __('Date') }}</th>
                     <th class="text-left px-4 cursor-pointer" wire:click="ordenarPor('horas')">{{ __('Hours') }}</th>
-                    <th class="text-left px-4 cursor-pointer" wire:click="ordenarPor('user_id')">{{ __('Employee') }}</th>
-                    <th class="text-left px-4 cursor-pointer" wire:click="ordenarPor('cliente_id')">{{ __('Client') }}</th>
+                    <th class="text-left px-4 cursor-pointer" wire:click="ordenarPor('user_id')">{{ __('Employee') }}
+                    </th>
+                    <th class="text-left px-4 cursor-pointer" wire:click="ordenarPor('cliente_id')">{{ __('Client') }}
+                    </th>
                     <th class="text-left px-4 cursor-pointer">{{ __('Actions') }}</th>
                 </tr>
             </thead>
@@ -66,13 +67,12 @@
                         <td class="px-3 py-2">{{ $tarea->cliente->name ?? '-' }}</td>
                         <td class="px-3 py-2 flex gap-1">
                             <button wire:click="show({{ $tarea->id }})"
-                                class="px-2 py-1 bg-emerald-500 text-white rounded hover:bg-emerald-600 text-xs">Ver</button>
+                                class="px-2 py-1 bg-blue-400 text-white rounded hover:bg-blue-500 text-xs" title="{{ __('Detail') }}"><flux:icon.detail class="size-4" /></button>
                             @if ($isAdmin)
                                 <button wire:click="edit({{ $tarea->id }})"
-                                    class="px-2 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 text-xs">Editar</button>
+                                    class="px-2 py-1 bg-emerald-500 text-white rounded hover:bg-emerald-600 text-xs" title="{{ __('Edit') }}"><flux:icon.edit class="size-4" /></button>
                                 <button wire:click="confirmDelete({{ $tarea->id }})"
-                                    class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs">Eliminar</button>
-                                {{--  onclick="return confirm('¿Realmente desea borrar la tarea:  {{ $tarea->tarea }} ?')" --}}
+                                    class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs" title="{{ __('Delete') }}"><flux:icon.delete class="size-4" /></button>
                             @endif
                         </td>
                     </tr>
@@ -116,34 +116,29 @@
 
                     <div class="mb-3">
                         <flux:textarea readonly wire:model="tarea" rows="2" maxlength="255"
-                                label="{{ __('Task') }}"  />
+                            label="{{ __('Task') }}" />
+
                     </div>
                     <div class="mb-3">
-                        <label class="block text-zinc-700 dark:text-zinc-200 mb-1">{{ __('Date') }}</label>
-                        <input type="date" wire:model="fecha" readonly
-                            class="w-full rounded border bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200" />
+                        <p><strong>{{ __('Date') }}: &nbsp; </strong> {{ $fecha }}</p>
                     </div>
                     <div class="mb-3">
-                        <label class="block text-zinc-700 dark:text-zinc-200 mb-1">{{ __('Hours') }}</label>
-                        <input type="number" wire:model="horas" readonly
-                            class="w-full rounded border bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200" />
+                        <p><strong>{{ __('Hours') }}: &nbsp; </strong> {{ $horas }}</p>
                     </div>
                     <div class="mb-3">
-                        <label class="block text-zinc-700 dark:text-zinc-200 mb-1">{{ __('Status') }}</label>
-                        <input type="text" wire:model="estatus" readonly
-                            class="w-full rounded border bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200" />
+                        <p><strong>{{ __('Status') }}: &nbsp; </strong> {{ $estatus }}</p>
                     </div>
                     <div class="mb-3">
-                        <label class="block text-zinc-700 dark:text-zinc-200 mb-1">{{ __('Client') }}</label>
-                        <input type="text" value="{{ optional($allClientes->find($cliente_id))->name }}" readonly
-                            class="w-full rounded border bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200" />
+                        <p><strong>{{ __('Client') }}: &nbsp; </strong>
+                            {{ optional($allClientes->find($cliente_id))->name }}</p>
                     </div>
                     <div class="mb-3">
-                        <label class="block text-zinc-700 dark:text-zinc-200 mb-1">{{ __('Employee(s)') }}</label>
-                        <input type="text"
-                            value="@if (is_array($user_id)) {{ $allEmpleados->whereIn('id', $user_id)->pluck('name')->join(', ') }}@else{{ optional($allEmpleados->find($user_id))->name }} @endif"
-                            readonly
-                            class="w-full rounded border bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200" />
+                        <p><strong>{{ __('Employee') }}: &nbsp; </strong>
+                            {{ optional($allEmpleados->find($user_id))->name }}</p>
+                    </div>
+                    <div class="mb-3">
+                        <p><strong>{{ __('Observation') }}: &nbsp; </strong> {{ $observacion }}</p>
+
                     </div>
                     @if ($deleteMode)
                         <div class="text-red-600 font-semibold mb-4">
@@ -168,9 +163,6 @@
                         <div class="mb-3">
                             <flux:textarea autofocus wire:model="tarea" rows="2" maxlength="255"
                                 label="{{ __('Task') }}" placeholder="{{ __('Task Description') }}" />
-                            @error('tarea')
-                                <span class="text-red-600 text-sm">{{ $message }}</span>
-                            @enderror
                         </div>
                         <div class="mb-3">
                             <label class="block text-zinc-700 dark:text-zinc-200 mb-1">{{ __('Date') }}</label>
@@ -225,11 +217,15 @@
                                 <span class="text-red-600 text-sm">{{ $message }}</span>
                             @enderror
                         </div>
+                        <div class="mb-3">
+                            <flux:textarea wire:model="observacion" rows="2" maxlength="255"
+                                label="{{ __('Observation') }}" placeholder="{{ __('Observation') }}" />
+                        </div>
                         <div class="flex gap-2 mt-4">
                             <button type="submit"
                                 class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">{{ __('Save') }}
                             </button>
-                            <button type="button" wire:click="closeModal"
+                            <button type="button" wire:click="closeModalGrupo"
                                 class="px-4 py-2 bg-zinc-500 text-white rounded hover:bg-zinc-600">{{ __('Back') }}</button>
                         </div>
                     </form>

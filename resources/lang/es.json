@@ -147,5 +147,7 @@
     "Task Group created successfully": "Grupo de Tareas creado correctamente.",
     "Task Group updated successfully": "Grupo de Tareas actualizado correctamente.",
     "Task Group deleted successfully": "Grupo de Tareas eliminado correctamente.",
-    "Task Group Details": "Detalle del Grupo de Tareas"
+    "Task Group Details": "Detalle del Grupo de Tareas",
+    "Observation": "Observación",
+    "Detail": "Detalle"
 }

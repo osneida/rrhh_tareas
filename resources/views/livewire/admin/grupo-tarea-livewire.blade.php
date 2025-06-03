@@ -27,7 +27,7 @@
                 <thead>
                     <tr class="bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200">
                         @foreach (['id' => '#', 'descripcion' => 'Descripción', 'created_at' => 'Fecha Creación'] as $field => $label)
-                            <th class="text-left px-4 py-2 cursor-pointer" wire:click="sortBy('{{ $field }}')">
+                            <th class="text-left px-1 py-1 cursor-pointer" wire:click="sortBy('{{ $field }}')">
                                 {{ $label }}
                                 @if ($sortField === $field)
                                     <span>
@@ -40,22 +40,22 @@
                                 @endif
                             </th>
                         @endforeach
-                        <th class="text-left px-4 py-2">Acciones</th>
+                        <th class="text-left px-6 py-2">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($tareas_grupo as $tarea)
                         <tr wire:key="tarea-{{ $tarea->id }}"
                             class="border-t border-zinc-200 dark:border-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-800">
-                            <td class="px-4 py-2">{{ $loop->iteration }}</td>
-                            <td class="px-4 py-2">{{ $tarea->descripcion }}</td>
-                            <td class="px-4 py-2">{{ $tarea->created_at }}</td>
-                            <td class="px-4 py-2">
+                            <td class="px-1 py-1">{{ $loop->iteration }}</td>
+                            <td class="px-1 py-1">{{ $tarea->descripcion }}</td>
+                            <td class="px-1 py-1">{{ $tarea->created_at }}</td>
+                            <td class="px-1 py-1">
                                 @if ($isAdmin)
                                     <button wire:click="show({{ $tarea->id }})"
-                                        class="px-2 py-1 bg-emerald-500 text-white rounded hover:bg-emerald-600 text-xs">Ver</button>
+                                        class="px-2 py-1 bg-emerald-500 text-white rounded hover:bg-emerald-600 text-xs" title="{{ __('Edit') }}"><flux:icon.edit class="size-4" /> </button>
                                     <button wire:click="confirmDelete({{ $tarea->id }})"
-                                        class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs">Eliminar</button>
+                                        class="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-700 text-xs" title="{{ __('Delete') }}"><flux:icon.delete class="size-4" /></button>
                                 @endif
                             </td>
                         </tr>
@@ -92,9 +92,7 @@
                     <div class="mb-3">
                         <flux:textarea autofocus wire:model="descripcion" rows="2" maxlength="255"
                             label="{{ __('Group Description') }}" placeholder="{{ __('Group Description') }}" />
-                        @error('descripcion')
-                            <span class="text-red-600 text-sm">{{ $message }}</span>
-                        @enderror
+
                     </div>
                     =============
                     <h2 class="text-xl font-bold mb-4 text-zinc-800 dark:text-zinc-100">{{ __('New Tasks') }}</h2>
@@ -102,9 +100,7 @@
                     <div class="mb-3">
                         <flux:textarea wire:model="tarea" rows="2" maxlength="255" label="{{ __('Task') }}"
                             placeholder="{{ __('Task Description') }}" />
-                        @error('tarea')
-                            <span class="text-red-600 text-sm">{{ $message }}</span>
-                        @enderror
+
                     </div>
                     <div class="mb-3">
                         <label class="block text-zinc-700 dark:text-zinc-200 mb-1">{{ __('Start date') }}</label>
@@ -138,9 +134,10 @@
                                         class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">{{ $di->label() }}</label>
                                 </div>
                             @endforeach
-
-
                         </div>
+                        @error('dias')
+                            <span class="text-red-600 text-sm">{{ $message }}</span>
+                        @enderror
                     </div>
                     <div class="mb-3">
                         <label class="block text-zinc-700 dark:text-zinc-200 mb-1">{{ __('Hours') }}</label>
@@ -181,7 +178,7 @@
                             </select>
                         @endif
 
-                        @error('user.*')
+                        @error('user_id')
                             <span class="text-red-600 text-sm">{{ $message }}</span>
                         @enderror
                     </div>
@@ -249,9 +246,9 @@
 
                                         @if ($isAdmin)
                                             <button wire:click="edit({{ $tarea->id }})"
-                                                class="px-2 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 text-xs">Editar</button>
+                                                class="px-2 py-1 bg-emerald-500 text-white rounded hover:bg-emerald-600 text-xs" title="{{ __('Edit') }}"><flux:icon.edit class="size-4" /></button>
                                             <button wire:click="confirmDelete({{ $tarea->id }})"
-                                                class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs">Eliminar</button>
+                                                class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs" title="{{ __('Delete') }}"><flux:icon.delete class="size-4" /></button>
                                         @endif
                                     </td>
                                 </tr>
@@ -282,6 +279,69 @@
             <button type="button" wire:click="closeModal"
                 class="px-4 py-2 bg-zinc-500 text-white rounded hover:bg-zinc-600">{{ __('Back') }}</button>
         </div>
+    @endif
+
+    @if ($editTarea)
+        <form wire:submit.prevent="{{ $editTarea ? 'update' : 'store' }}">
+            <div class="mb-3">
+                <flux:textarea autofocus wire:model="tarea" rows="2" maxlength="255"
+                    label="{{ __('Task') }}" placeholder="{{ __('Task Description') }}" />
+            </div>
+            <div class="mb-3">
+                <label class="block text-zinc-700 dark:text-zinc-200 mb-1">{{ __('Date') }}</label>
+                <input type="date" wire:model="fecha"
+                    class="w-full rounded border focus:ring-2 focus:ring-blue-500" />
+                @error('fecha')
+                    <span class="text-red-600 text-sm">{{ $message }}</span>
+                @enderror
+            </div>
+            <div class="mb-3">
+                <label class="block text-zinc-700 dark:text-zinc-200 mb-1">{{ __('Hours') }}</label>
+                <input type="number" wire:model="horas" min="1" max="10"
+                    class="w-full rounded border focus:ring-2 focus:ring-blue-500" />
+                @error('horas')
+                    <span class="text-red-600 text-sm">{{ $message }}</span>
+                @enderror
+            </div>
+            <div class="mb-3">
+                <label class="block text-zinc-700 dark:text-zinc-200 mb-1">{{ __('Client') }}</label>
+                <select wire:model="cliente_id" class="w-full rounded border focus:ring-2 focus:ring-blue-500">
+                    <option value="">{{ __('Select Client') }}</option>
+                    @foreach ($allClientes as $cliente)
+                        <option value="{{ $cliente->id }}">{{ $cliente->name }}</option>
+                    @endforeach
+                </select>
+                @error('cliente_id')
+                    <span class="text-red-600 text-sm">{{ $message }}</span>
+                @enderror
+            </div>
+            <div class="mb-3">
+                <label class="block text-zinc-700 dark:text-zinc-200 mb-1">{{ __('Employee') }}</label>
+
+                <select wire:model="user_id" class="w-full rounded border focus:ring-2 focus:ring-blue-500">
+                    <option value="">{{ __('Select one employee') }}</option>
+                    @foreach ($allEmpleados as $user)
+                        <option value="{{ $user->id }}">{{ $user->name }}</option>
+                    @endforeach
+                </select>
+
+
+                @error('user.*')
+                    <span class="text-red-600 text-sm">{{ $message }}</span>
+                @enderror
+            </div>
+            <div class="mb-3">
+                <flux:textarea wire:model="observacion" rows="2" maxlength="255"
+                    label="{{ __('Observation') }}" placeholder="{{ __('Observation') }}" />
+            </div>
+            <div class="flex gap-2 mt-4">
+                <button type="submit"
+                    class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">{{ __('Save') }}
+                </button>
+                <button type="button" wire:click="closeModalGrupo"
+                    class="px-4 py-2 bg-zinc-500 text-white rounded hover:bg-zinc-600">{{ __('Back') }}</button>
+            </div>
+        </form>
     @endif
 
     @if (session()->has('success'))

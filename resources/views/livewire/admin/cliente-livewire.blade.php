@@ -73,12 +73,12 @@
                         </td>
                         <td class="px-3 py-2 flex gap-1">
                             <button wire:click="show({{ $cliente->id }})"
-                                class="px-2 py-1 bg-emerald-500 text-white rounded hover:bg-emerald-600 text-xs">Ver</button>
+                                class="px-2 py-1 bg-blue-400 text-white rounded hover:bg-blue-500 text-xs" title="{{ __('Detail') }}"><flux:icon.detail class="size-4" /></button>
                             @if ($isAdmin)
                                 <button wire:click="edit({{ $cliente->id }})"
-                                    class="px-2 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 text-xs">Editar</button>
+                                     class="px-2 py-1 bg-emerald-500 text-white rounded hover:bg-emerald-600 text-xs" title="{{ __('Edit') }}"><flux:icon.edit class="size-4" /></button>
                                 <button wire:click="confirmDelete({{ $cliente->id }})"
-                                    class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs">Eliminar</button>
+                                    class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs" title="{{ __('Delete') }}"><flux:icon.delete class="size-4" /></button>
                             @endif
                         </td>
                     </tr>
