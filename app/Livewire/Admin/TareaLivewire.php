@@ -14,10 +14,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use App\Enums\EstatusTareaEnum;
 use App\Enums\PaginacionEnum;
-use App\Livewire\Trait\TareaDeleteTrait;
+use App\Livewire\Trait\TareaTrait;
 class TareaLivewire extends Component
 {
-    use WithPagination, TareaDeleteTrait;
+    use WithPagination, TareaTrait;
 
     public $tareas, $tarea, $tarea_id;
     public $estatus, $fecha, $horas = 1, $user_id, $cliente_id, $observacion;
@@ -151,20 +151,7 @@ class TareaLivewire extends Component
         $this->deleteMode = false;
     }
 
-    public function edit($id)
-    {
-        $tarea = Tarea::findOrFail($id);
-        $this->tarea_id = $tarea->id;
-        $this->tarea = $tarea->tarea;
-        $this->estatus = $tarea->estatus;
-        $this->fecha = $tarea->fecha;
-        $this->horas = $tarea->horas;
-        $this->cliente_id = $tarea->cliente_id;
-        $this->user_id = $tarea->user_id; //->pluck('id')->toArray() ?? [];
-        $this->showModal = true;
-        $this->editMode = true;
-        $this->deleteMode = false;
-    }
+
 
     public function update()
     {

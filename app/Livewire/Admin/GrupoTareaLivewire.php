@@ -15,12 +15,12 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
-use App\Livewire\Trait\TareaDeleteTrait;
+use App\Livewire\Trait\TareaTrait;
 
 class GrupoTareaLivewire extends Component
 {
 
-    use WithPagination, TareaDeleteTrait;
+    use WithPagination, TareaTrait;
 
     public $search = '';
     public $sortField = 'id';
@@ -154,22 +154,6 @@ class GrupoTareaLivewire extends Component
         $this->createMode = false;
     }
 
-    public function edit($id)
-    {
-        $tarea = Tarea::findOrFail($id);
-        $this->tarea_id = $tarea->id;
-        $this->tarea = $tarea->tarea;
-        $this->estatus = $tarea->estatus;
-        $this->fecha = $tarea->fecha;
-        $this->horas = $tarea->horas;
-        $this->cliente_id = $tarea->cliente_id;
-        $this->user_id = $tarea->user_id;
-        $this->observacion = $tarea->observacion;
-        $this->closeModal();
-        $this->editTarea = true;
-        $this->dashboard = false;
-    }
-
     public function update()
     { // Actualizar tarea existente
         try {
@@ -232,7 +216,7 @@ class GrupoTareaLivewire extends Component
         return $fechas;
     }
 
-    public function closeModal()
+    public function closeModal_grupo()
     {
         $this->editMode   = false;
         $this->deleteMode = false;

@@ -192,7 +192,7 @@
                         <button type="submit"
                             class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">{{ __('Save') }}
                         </button>
-                        <button type="button" wire:click="closeModal"
+                        <button type="button" wire:click="closeModal_grupo"
                             class="px-4 py-2 bg-zinc-500 text-white rounded hover:bg-zinc-600">{{ __('Back') }}</button>
                     </div>
                 </form>
@@ -288,7 +288,7 @@
 
             </div>
 
-            <button type="button" wire:click="closeModal"
+            <button type="button" wire:click="closeModal_grupo"
                 class="px-4 py-2 bg-zinc-500 text-white rounded hover:bg-zinc-600">{{ __('Back') }}</button>
         </div>
     @endif
