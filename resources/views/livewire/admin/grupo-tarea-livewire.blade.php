@@ -53,9 +53,15 @@
                             <td class="px-1 py-1">
                                 @if ($isAdmin)
                                     <button wire:click="show({{ $tarea->id }})"
-                                        class="px-2 py-1 bg-emerald-500 text-white rounded hover:bg-emerald-600 text-xs" title="{{ __('Edit') }}"><flux:icon.edit class="size-4" /> </button>
+                                        class="px-2 py-1 bg-emerald-500 text-white rounded hover:bg-emerald-600 text-xs"
+                                        title="{{ __('Edit') }}">
+                                        <flux:icon.edit class="size-4" />
+                                    </button>
                                     <button wire:click="confirmDelete({{ $tarea->id }})"
-                                        class="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-700 text-xs" title="{{ __('Delete') }}"><flux:icon.delete class="size-4" /></button>
+                                        class="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-700 text-xs"
+                                        title="{{ __('Delete') }}">
+                                        <flux:icon.delete class="size-4" />
+                                    </button>
                                 @endif
                             </td>
                         </tr>
@@ -246,9 +252,15 @@
 
                                         @if ($isAdmin)
                                             <button wire:click="edit({{ $tarea->id }})"
-                                                class="px-2 py-1 bg-emerald-500 text-white rounded hover:bg-emerald-600 text-xs" title="{{ __('Edit') }}"><flux:icon.edit class="size-4" /></button>
+                                                class="px-2 py-1 bg-emerald-500 text-white rounded hover:bg-emerald-600 text-xs"
+                                                title="{{ __('Edit') }}">
+                                                <flux:icon.edit class="size-4" />
+                                            </button>
                                             <button wire:click="confirmDelete({{ $tarea->id }})"
-                                                class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs" title="{{ __('Delete') }}"><flux:icon.delete class="size-4" /></button>
+                                                class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs"
+                                                title="{{ __('Delete') }}">
+                                                <flux:icon.delete class="size-4" />
+                                            </button>
                                         @endif
                                     </td>
                                 </tr>
@@ -282,6 +294,7 @@
     @endif
 
     @if ($editTarea)
+        <h2 class="text-xl font-bold mb-4 text-zinc-800 dark:text-zinc-100">{{ __('Edit Task') }}</h2>
         <form wire:submit.prevent="{{ $editTarea ? 'update' : 'store' }}">
             <div class="mb-3">
                 <flux:textarea autofocus wire:model="tarea" rows="2" maxlength="255"
@@ -341,6 +354,33 @@
                 <button type="button" wire:click="closeModalGrupo"
                     class="px-4 py-2 bg-zinc-500 text-white rounded hover:bg-zinc-600">{{ __('Back') }}</button>
             </div>
+        </form>
+    @endif
+
+    @if ($deleteMode)
+        <h2 class="text-xl font-bold mb-4 text-zinc-800 dark:text-zinc-100">{{ __('Confirm Task Deletion') }}</h2>
+        <p><strong>{{ __('Task') }} :</strong> {{ $tarea }}</p>
+        <p><strong>{{ __('Date') }} :</strong> {{ $fecha }}</p>
+        <p><strong>{{ __('Hours') }} :</strong> {{ $horas }}</p>
+        <p><strong>{{ __('Client') }}: &nbsp; </strong>
+            {{ optional($allClientes->find($cliente_id))->name }}</p>
+        <p><strong>{{ __('Employee') }}: &nbsp; </strong>
+            {{ optional($allEmpleados->find($user_id))->name }}</p>
+        <p><strong>{{ __('Observation') }} :</strong> {{ $observacion }}</p>
+
+
+        <form wire:submit.prevent="{{ $editTarea ? 'update' : 'store' }}">
+
+            <div class="text-red-600 font-semibold mb-4">
+                {{ __('Are you sure you want to delete this task?') }}
+            </div>
+            <div class="mb-3">
+                <button wire:click="destroy({{ $tarea_id }})"
+                    class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">{{ __('Delete') }}</button>
+                <button type="button" wire:click="closeModalGrupo"
+                    class="px-4 py-2 bg-zinc-500 text-white rounded hover:bg-zinc-600">{{ __('Cancel') }}</button>
+            </div>
+
         </form>
     @endif
 

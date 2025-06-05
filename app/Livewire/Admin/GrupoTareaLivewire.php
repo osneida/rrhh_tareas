@@ -15,11 +15,12 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
+use App\Livewire\Trait\TareaDeleteTrait;
 
 class GrupoTareaLivewire extends Component
 {
 
-    use WithPagination;
+    use WithPagination, TareaDeleteTrait;
 
     public $search = '';
     public $sortField = 'id';
@@ -141,14 +142,12 @@ class GrupoTareaLivewire extends Component
 
     public function show($id)
     {
-
         $this->showTarea = $grupo = GrupoTarea::findOrFail($id);
         $this->descripcion = $grupo->descripcion;
         $this->grupo_tarea_id = $grupo->id;
         $this->fecha_inicio = $grupo->fecha_inicio;
         $this->fecha_fin = $grupo->fecha_fin;
         $this->dias = $grupo->dias;
-
         $this->editMode = false;
         $this->deleteMode = false;
         $this->dashboard = false;
@@ -197,7 +196,6 @@ class GrupoTareaLivewire extends Component
             throw $th;
         }
     }
-
 
     public function sortBy($field)
     {
@@ -251,4 +249,27 @@ class GrupoTareaLivewire extends Component
         $this->dashboard = false;
         $this->show($this->grupo_tarea_id);
     }
+
+    public function confirmDelete($id)
+    {
+       $tarea = Tarea::findOrFail($id);
+        $this->tarea_id = $tarea->id;
+        $this->tarea = $tarea->tarea;
+        $this->estatus = $tarea->estatus;
+        $this->fecha = $tarea->fecha;
+        $this->horas = $tarea->horas;
+        $this->cliente_id = $tarea->cliente_id;
+        $this->user_id = $tarea->user_id;
+        $this->observacion = $tarea->observacion;
+        $this->deleteMode = true;
+
+        $this->editMode   = false;
+        $this->createMode = false;
+        $this->showTarea = null;
+        $this->dashboard = false;
+
+        // Log::info([$this->tarea_id, $this->tarea,  $this->estatus,  $this->fecha,  $this->horas, $this->cliente_id,  $this->user_id,  $this->observacion]);
+    }
+
+
 }

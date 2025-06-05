@@ -14,10 +14,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use App\Enums\EstatusTareaEnum;
 use App\Enums\PaginacionEnum;
-
+use App\Livewire\Trait\TareaDeleteTrait;
 class TareaLivewire extends Component
 {
-    use WithPagination;
+    use WithPagination, TareaDeleteTrait;
 
     public $tareas, $tarea, $tarea_id;
     public $estatus, $fecha, $horas = 1, $user_id, $cliente_id, $observacion;
@@ -196,25 +196,6 @@ class TareaLivewire extends Component
         $this->deleteMode = true; // Activar modo eliminar
     }
 
-    public function destroy($id)
-    {
-        try {
-            $tarea = Tarea::findOrFail($id);
-            $tarea->delete();
-
-            $this->closeModal();
-
-
-            // $this->deleteMode = false;
-            //$this->showModal = false; // Cierra el modal
-            //$this->showTarea = null;
-
-            session()->flash('success', __('Task deleted successfully'));
-        } catch (\Throwable $th) {
-            Log::error('Error al eliminar destroy: ' . $th->getMessage());
-            throw $th;
-        }
-    }
 
     public function closeModal()
     {
