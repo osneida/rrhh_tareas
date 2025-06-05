@@ -45,7 +45,7 @@
                             @endif
                         </th>
                     @endforeach
-                    <th class="text-left px-4 py-2">Acciones</th>
+                    <th class="text-left px-4 py-2">{{ __('Actions') }}</th>
                 </tr>
             </thead>
             <tbody>
