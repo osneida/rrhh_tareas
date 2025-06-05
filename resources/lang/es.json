@@ -149,5 +149,6 @@
     "Task Group deleted successfully": "Grupo de Tareas eliminado correctamente.",
     "Task Group Details": "Detalle del Grupo de Tareas",
     "Observation": "Observación",
-    "Detail": "Detalle"
+    "Detail": "Detalle",
+    "Creation date":"Fecha de creación"
 }

@@ -73,7 +73,7 @@ class GrupoTareaLivewire extends Component
         if ($this->grupo_tarea_id && !$this->dashboard) {
             $grupo = GrupoTarea::find($this->grupo_tarea_id);
             $tareasPaginadas = $grupo
-                ? $grupo->tareas()->orderBy('fecha', 'asc')->paginate(10)
+                ? $grupo->tareas()->orderBy($this->ordenCampo, $this->ordenDireccion)->paginate(10)
                 : null;
         }
 

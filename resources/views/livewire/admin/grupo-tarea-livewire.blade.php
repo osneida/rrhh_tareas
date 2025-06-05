@@ -26,7 +26,7 @@
             <table class="min-w-full bg-white border rounded shadow">
                 <thead>
                     <tr class="bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200">
-                        @foreach (['id' => '#', 'descripcion' => 'Descripción', 'created_at' => 'Fecha Creación'] as $field => $label)
+                        @foreach (['id' => '#', 'descripcion' => __('Description'), 'created_at' => __('Creation date')] as $field => $label)
                             <th class="text-left px-1 py-1 cursor-pointer" wire:click="sortBy('{{ $field }}')">
                                 {{ $label }}
                                 @if ($sortField === $field)
@@ -40,7 +40,7 @@
                                 @endif
                             </th>
                         @endforeach
-                        <th class="text-left px-6 py-2">Acciones</th>
+                        <th class="text-left px-6 py-2">{{__('Actions')}}</th>
                     </tr>
                 </thead>
                 <tbody>

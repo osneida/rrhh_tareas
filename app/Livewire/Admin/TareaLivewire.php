@@ -27,8 +27,6 @@ class TareaLivewire extends Component
     public $filtroEstatus = '';
     public $filtroEmpleado = '';
     public $filtroCliente = '';
-    public $ordenCampo = 'id';
-    public $ordenDireccion = 'desc';
     public $showTarea;
     public $showModal = false;
     public $editMode = false;
@@ -95,16 +93,7 @@ class TareaLivewire extends Component
         }
     }
 
-    // MÉTODO PARA ORDENAR POR COLUMNA
-    public function ordenarPor($campo)
-    {
-        if ($this->ordenCampo === $campo) {
-            $this->ordenDireccion = $this->ordenDireccion === 'asc' ? 'desc' : 'asc';
-        } else {
-            $this->ordenCampo = $campo;
-            $this->ordenDireccion = 'asc';
-        }
-    }
+
 
     public function create()
     {

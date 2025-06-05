@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Log;
 
 trait TareaTrait
 {
+    public $ordenCampo = 'id';
+    public $ordenDireccion = 'desc';
+
     public function edit($id)
     {
         $tarea = Tarea::findOrFail($id);
@@ -51,6 +54,17 @@ trait TareaTrait
         } catch (\Throwable $th) {
             Log::error('Error al eliminar destroy: ' . $th->getMessage());
             throw $th;
+        }
+    }
+
+    // MÉTODO PARA ORDENAR POR COLUMNA
+    public function ordenarPor($campo)
+    {
+        if ($this->ordenCampo === $campo) {
+            $this->ordenDireccion = $this->ordenDireccion === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->ordenCampo = $campo;
+            $this->ordenDireccion = 'asc';
         }
     }
 }
