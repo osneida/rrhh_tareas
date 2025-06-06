@@ -42,17 +42,86 @@
         <table class="min-w-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded shadow">
             <thead>
                 <tr class="bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200">
-                    <th class="px-3 text-center cursor-pointer" wire:click="ordenarPor('id')">#</th>
-                    <th class="px-3 text-left cursor-pointer" wire:click="ordenarPor('tarea')">{{ __('Task') }}</th>
-                    <th class="text-left px-4 cursor-pointer" wire:click="ordenarPor('estatus')">{{ __('Status') }}
+                    <th class="px-3 text-center cursor-pointer" wire:click="ordenarPor('id')">
+                        @if ($ordenCampo === 'id')
+                            <span>
+                                @if ($ordenDireccion === 'asc')
+                                    ▲
+                                @else
+                                    ▼
+                                @endif
+                            </span>
+                        @endif #
                     </th>
-                    <th class="text-left px-4 cursor-pointer" wire:click="ordenarPor('fecha')">{{ __('Date') }}</th>
-                    <th class="text-left px-4 cursor-pointer" wire:click="ordenarPor('horas')">{{ __('Hours') }}</th>
-                    <th class="text-left px-4 cursor-pointer" wire:click="ordenarPor('user_id')">{{ __('Employee') }}
+                    <th class="px-3 text-left cursor-pointer" wire:click="ordenarPor('tarea')">
+                        @if ($ordenCampo === 'tarea')
+                            <span>
+                                @if ($ordenDireccion === 'asc')
+                                    ▲
+                                @else
+                                    ▼
+                                @endif
+                            </span>
+                        @endif{{ __('Task') }}
                     </th>
-                    <th class="text-left px-4 cursor-pointer" wire:click="ordenarPor('cliente_id')">{{ __('Client') }}
+                    <th class="text-left px-4 cursor-pointer" wire:click="ordenarPor('estatus')">
+
+                        @if ($ordenCampo === 'estatus')
+                            <span>
+                                @if ($ordenDireccion === 'asc')
+                                    ▲
+                                @else
+                                    ▼
+                                @endif
+                            </span>
+                        @endif{{ __('Status') }}
                     </th>
-                    <th class="text-left px-4 cursor-pointer">{{ __('Actions') }}</th>
+                    <th class="text-left px-4 cursor-pointer" wire:click="ordenarPor('fecha')">
+                        @if ($ordenCampo === 'fecha')
+                            <span>
+                                @if ($ordenDireccion === 'asc')
+                                    ▲
+                                @else
+                                    ▼
+                                @endif
+                            </span>
+                        @endif{{ __('Date') }}
+                    </th>
+                    <th class="text-left px-4 cursor-pointer" wire:click="ordenarPor('horas')">
+                        @if ($ordenCampo === 'horas')
+                            <span>
+                                @if ($ordenDireccion === 'asc')
+                                    ▲
+                                @else
+                                    ▼
+                                @endif
+                            </span>
+                        @endif{{ __('Hours') }}
+                    </th>
+                    <th class="text-left px-4 cursor-pointer" wire:click="ordenarPor('user_id')">
+                        @if ($ordenCampo === 'user_id')
+                            <span>
+                                @if ($ordenDireccion === 'asc')
+                                    ▲
+                                @else
+                                    ▼
+                                @endif
+                            </span>
+                        @endif{{ __('Employee') }}
+                    </th>
+                    <th class="text-left px-4 cursor-pointer" wire:click="ordenarPor('cliente_id')">
+                        @if ($ordenCampo === 'cliente_id')
+                            <span>
+                                @if ($ordenDireccion === 'asc')
+                                    ▲
+                                @else
+                                    ▼
+                                @endif
+                            </span>
+
+                        @endif{{ __('Client') }}
+                    </th>
+                    <th class="text-left px-4">{{ __('Actions') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -67,12 +136,21 @@
                         <td class="px-3 py-2">{{ $tarea->cliente->name ?? '-' }}</td>
                         <td class="px-3 py-2 flex gap-1">
                             <button wire:click="show({{ $tarea->id }})"
-                                class="px-2 py-1 bg-blue-400 text-white rounded hover:bg-blue-500 text-xs" title="{{ __('Detail') }}"><flux:icon.detail class="size-4" /></button>
+                                class="px-2 py-1 bg-blue-400 text-white rounded hover:bg-blue-500 text-xs"
+                                title="{{ __('Detail') }}">
+                                <flux:icon.detail class="size-4" />
+                            </button>
                             @if ($isAdmin)
                                 <button wire:click="edit({{ $tarea->id }})"
-                                    class="px-2 py-1 bg-emerald-500 text-white rounded hover:bg-emerald-600 text-xs" title="{{ __('Edit') }}"><flux:icon.edit class="size-4" /></button>
+                                    class="px-2 py-1 bg-emerald-500 text-white rounded hover:bg-emerald-600 text-xs"
+                                    title="{{ __('Edit') }}">
+                                    <flux:icon.edit class="size-4" />
+                                </button>
                                 <button wire:click="confirmDelete({{ $tarea->id }})"
-                                    class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs" title="{{ __('Delete') }}"><flux:icon.delete class="size-4" /></button>
+                                    class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs"
+                                    title="{{ __('Delete') }}">
+                                    <flux:icon.delete class="size-4" />
+                                </button>
                             @endif
                         </td>
                     </tr>

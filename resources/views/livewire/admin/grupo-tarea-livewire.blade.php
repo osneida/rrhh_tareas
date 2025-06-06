@@ -40,7 +40,7 @@
                                 @endif
                             </th>
                         @endforeach
-                        <th class="text-left px-6 py-2">{{__('Actions')}}</th>
+                        <th class="text-left px-6 py-2">{{ __('Actions') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -223,19 +223,69 @@
                         class="min-w-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded shadow">
                         <thead>
                             <tr class="bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200">
-                                <th class="px-3 text-center cursor-pointer" wire:click="ordenarPor('id')">ID</th>
+                                <th class="px-3 text-center cursor-pointer" wire:click="ordenarPor('id')">
+                                    @if ($ordenCampo === 'id')
+                                        <span>
+                                            @if ($ordenDireccion === 'asc')
+                                                ▲
+                                            @else
+                                                ▼
+                                            @endif
+                                        </span>
+                                    @endif ID
+                                </th>
                                 <th class="px-3 text-left cursor-pointer" wire:click="ordenarPor('tarea')">
-                                    {{ __('Task') }}</th>
+                                    @if ($ordenCampo === 'tarea')
+                                        <span>
+                                            @if ($ordenDireccion === 'asc')
+                                                ▲
+                                            @else
+                                                ▼
+                                            @endif
+                                        </span>
+                                    @endif {{ __('Task') }}</th>
                                 <th class="text-left px-4 cursor-pointer" wire:click="ordenarPor('estatus')">
-                                    {{ __('Status') }}</th>
+                                     @if ($ordenCampo === 'estatus')
+                                        <span>
+                                            @if ($ordenDireccion === 'asc')
+                                                ▲
+                                            @else
+                                                ▼
+                                            @endif
+                                        </span>
+                                    @endif{{ __('Status') }}</th>
                                 <th class="text-left px-4 cursor-pointer" wire:click="ordenarPor('fecha')">
-                                    {{ __('Date') }}</th>
+                                     @if ($ordenCampo === 'fecha')
+                                        <span>
+                                            @if ($ordenDireccion === 'asc')
+                                                ▲
+                                            @else
+                                                ▼
+                                            @endif
+                                        </span>
+                                    @endif {{ __('Date') }}</th>
                                 <th class="text-left px-4 cursor-pointer" wire:click="ordenarPor('horas')">
-                                    {{ __('Hours') }}</th>
+                                      @if ($ordenCampo === 'horas')
+                                        <span>
+                                            @if ($ordenDireccion === 'asc')
+                                                ▲
+                                            @else
+                                                ▼
+                                            @endif
+                                        </span>
+                                    @endif{{ __('Hours') }}</th>
                                 <th class="text-left px-4 cursor-pointer" wire:click="ordenarPor('user_id')">
-                                    {{ __('Employee') }}</th>
+                                     @if ($ordenCampo === 'user_id')
+                                        <span>
+                                            @if ($ordenDireccion === 'asc')
+                                                ▲
+                                            @else
+                                                ▼
+                                            @endif
+                                        </span>
+                                    @endif {{ __('Employee') }}</th>
 
-                                <th class="text-left px-4 cursor-pointer">{{ __('Actions') }}</th>
+                                <th class="text-left px-4">{{ __('Actions') }}</th>
                             </tr>
                         </thead>
                         <tbody>

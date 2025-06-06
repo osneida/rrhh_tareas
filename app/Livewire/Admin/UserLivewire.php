@@ -66,6 +66,8 @@ class UserLivewire extends Component
     {
         $user->status = !$user->status;
         $user->save();
+
+        session()->flash('success', (__('Status updated successfully')));
     }
 
     public function mount()

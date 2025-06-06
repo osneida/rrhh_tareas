@@ -31,19 +31,83 @@
         <table class="min-w-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded shadow">
             <thead>
                 <tr class="bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200">
-                    <th class="text-left px-4 py-2 cursor-pointer" wire:click="ordenarPor('id')"># </th>
-                    <th class="text-left px-4 py-2 cursor-pointer" wire:click="ordenarPor('name')">{{ __('Client') }}
+                    <th class="text-left px-4 py-2 cursor-pointer" wire:click="ordenarPor('id')">
+                        @if ($ordenCampo === 'id')
+                            <span>
+                                @if ($ordenDireccion === 'asc')
+                                    ▲
+                                @else
+                                    ▼
+                                @endif
+                            </span>
+                        @endif#
+                    </th>
+                    <th class="text-left px-4 py-2 cursor-pointer" wire:click="ordenarPor('name')">
+                        @if ($ordenCampo === 'name')
+                            <span>
+                                @if ($ordenDireccion === 'asc')
+                                    ▲
+                                @else
+                                    ▼
+                                @endif
+                            </span>
+                        @endif{{ __('Client') }}
                     </th>
                     <th class="text-left px-4 py-2 cursor-pointer" wire:click="ordenarPor('address')">
-                        {{ __('address') }}</th>
-                    <th class="text-left px-4 py-2 cursor-pointer" wire:click="ordenarPor('cif')">{{ __('cif') }}
+                        @if ($ordenCampo === 'address')
+                            <span>
+                                @if ($ordenDireccion === 'asc')
+                                    ▲
+                                @else
+                                    ▼
+                                @endif
+                            </span>
+                        @endif{{ __('address') }}
                     </th>
-                    <th class="text-left px-4 py-2 cursor-pointer" wire:click="ordenarPor('mail')">{{ __('mail') }}
+                    <th class="text-left px-4 py-2 cursor-pointer" wire:click="ordenarPor('cif')">
+                        @if ($ordenCampo === 'cif')
+                            <span>
+                                @if ($ordenDireccion === 'asc')
+                                    ▲
+                                @else
+                                    ▼
+                                @endif
+                            </span>
+                        @endif{{ __('cif') }}
                     </th>
-                    <th class="text-left px-4 py-2 cursor-pointer" wire:click="ordenarPor('phone')">{{ __('phone') }}
+                    <th class="text-left px-4 py-2 cursor-pointer" wire:click="ordenarPor('mail')">
+                        @if ($ordenCampo === 'mail')
+                            <span>
+                                @if ($ordenDireccion === 'asc')
+                                    ▲
+                                @else
+                                    ▼
+                                @endif
+                            </span>
+                        @endif{{ __('mail') }}
+                    </th>
+                    <th class="text-left px-4 py-2 cursor-pointer" wire:click="ordenarPor('phone')">
+                        @if ($ordenCampo === 'phone')
+                            <span>
+                                @if ($ordenDireccion === 'asc')
+                                    ▲
+                                @else
+                                    ▼
+                                @endif
+                            </span>
+                        @endif{{ __('phone') }}
                     </th>
                     <th class="text-left px-4 py-2 cursor-pointer" wire:click="ordenarPor('status')">
-                        {{ __('status') }}</th>
+                        @if ($ordenCampo === 'status')
+                            <span>
+                                @if ($ordenDireccion === 'asc')
+                                    ▲
+                                @else
+                                    ▼
+                                @endif
+                            </span>
+                        @endif {{ __('status') }}
+                    </th>
                     <th>{{ __('Actions') }}</th>
                 </tr>
             </thead>
@@ -73,12 +137,21 @@
                         </td>
                         <td class="px-3 py-2 flex gap-1">
                             <button wire:click="show({{ $cliente->id }})"
-                                class="px-2 py-1 bg-blue-400 text-white rounded hover:bg-blue-500 text-xs" title="{{ __('Detail') }}"><flux:icon.detail class="size-4" /></button>
+                                class="px-2 py-1 bg-blue-400 text-white rounded hover:bg-blue-500 text-xs"
+                                title="{{ __('Detail') }}">
+                                <flux:icon.detail class="size-4" />
+                            </button>
                             @if ($isAdmin)
                                 <button wire:click="edit({{ $cliente->id }})"
-                                     class="px-2 py-1 bg-emerald-500 text-white rounded hover:bg-emerald-600 text-xs" title="{{ __('Edit') }}"><flux:icon.edit class="size-4" /></button>
+                                    class="px-2 py-1 bg-emerald-500 text-white rounded hover:bg-emerald-600 text-xs"
+                                    title="{{ __('Edit') }}">
+                                    <flux:icon.edit class="size-4" />
+                                </button>
                                 <button wire:click="confirmDelete({{ $cliente->id }})"
-                                    class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs" title="{{ __('Delete') }}"><flux:icon.delete class="size-4" /></button>
+                                    class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs"
+                                    title="{{ __('Delete') }}">
+                                    <flux:icon.delete class="size-4" />
+                                </button>
                             @endif
                         </td>
                     </tr>

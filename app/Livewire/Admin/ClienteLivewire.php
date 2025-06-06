@@ -164,13 +164,13 @@ class ClienteLivewire extends Component
         }
     }
 
-    public function cambiar_status($id)
+    public function cambiar_status(Cliente $cliente)
     {
-        $cliente = Cliente::findOrFail($id);
-        $cliente->update([
-            'status'    => !$cliente->status,
-        ]);
-        session()->flash('success', ('Status updated successfully'));
+
+        $cliente->status = !$cliente->status;
+        $cliente->save();
+
+        session()->flash('success', (__('Status updated successfully')));
     }
 
     public function confirmDelete($id)
@@ -194,7 +194,7 @@ class ClienteLivewire extends Component
 
             $this->closeModal();
 
-            session()->flash('success',  __('client.deleted'));
+            session()->flash('success',  __('Client deleted successfully'));
         } catch (\Throwable $th) {
             Log::error('Error al eliminar destroy cliente: ' . $th->getMessage());
             throw $th;
