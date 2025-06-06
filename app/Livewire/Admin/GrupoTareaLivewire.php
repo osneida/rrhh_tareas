@@ -96,7 +96,7 @@ class GrupoTareaLivewire extends Component
 
     public function create()
     {
-        $this->reset(['grupo_tarea_id', 'tarea', 'estatus', 'fecha', 'horas', 'cliente_id', 'user_id', 'tarea_id', 'editMode', 'deleteMode', 'descripcion', 'fecha_inicio', 'fecha_fin']);
+        $this->reset(['grupo_tarea_id', 'tarea', 'estatus', 'fecha', 'horas', 'cliente_id', 'user_id', 'tarea_id', 'editMode', 'deleteMode', 'descripcion', 'fecha_inicio', 'fecha_fin','dias', 'observacion']);
 
         $this->editMode   = false;
         $this->deleteMode = false;
