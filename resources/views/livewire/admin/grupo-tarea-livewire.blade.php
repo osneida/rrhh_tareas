@@ -388,18 +388,6 @@
                     @enderror
                 </div>
                 <div class="mb-3">
-                    <label class="block text-zinc-700 dark:text-zinc-200 mb-1">{{ __('Client') }}</label>
-                    <select wire:model="cliente_id" class="w-full rounded border focus:ring-2 focus:ring-blue-500">
-                        <option value="">{{ __('Select Client') }}</option>
-                        @foreach ($allClientes as $cliente)
-                            <option value="{{ $cliente->id }}">{{ $cliente->name }}</option>
-                        @endforeach
-                    </select>
-                    @error('cliente_id')
-                        <span class="text-red-600 text-sm">{{ $message }}</span>
-                    @enderror
-                </div>
-                <div class="mb-3">
                     <label class="block text-zinc-700 dark:text-zinc-200 mb-1">{{ __('Employee') }}</label>
 
                     <select wire:model="user_id" class="w-full rounded border focus:ring-2 focus:ring-blue-500">
