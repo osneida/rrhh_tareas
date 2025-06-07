@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Log;
 use App\Enums\EstatusTareaEnum;
 use App\Enums\PaginacionEnum;
 use App\Livewire\Trait\TareaTrait;
+
 class TareaLivewire extends Component
 {
     use WithPagination, TareaTrait;
@@ -75,7 +76,17 @@ class TareaLivewire extends Component
         }
 
         // ORDENAMIENTO
-        $query->orderBy($this->ordenCampo, $this->ordenDireccion);
+        if ($this->ordenCampo === 'user_name') {
+            $query->join('users', 'tareas.user_id', '=', 'users.id')
+                ->orderBy('users.name', $this->ordenDireccion)
+                ->select('tareas.*');
+        } elseif ($this->ordenCampo === 'cliente_name') {
+            $query->join('clientes', 'tareas.cliente_id', '=', 'clientes.id')
+                ->orderBy('clientes.name', $this->ordenDireccion)
+                ->select('tareas.*');
+        } else {
+            $query->orderBy($this->ordenCampo, $this->ordenDireccion);
+        }
 
         return $query;
     }

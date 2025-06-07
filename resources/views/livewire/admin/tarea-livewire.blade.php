@@ -98,8 +98,8 @@
                             </span>
                         @endif{{ __('Hours') }}
                     </th>
-                    <th class="text-left px-4 cursor-pointer" wire:click="ordenarPor('user_id')">
-                        @if ($ordenCampo === 'user_id')
+                    <th class="text-left px-4 cursor-pointer" wire:click="ordenarPor('user_name')">
+                        @if ($ordenCampo === 'user_name')
                             <span>
                                 @if ($ordenDireccion === 'asc')
                                     ▲
@@ -109,8 +109,8 @@
                             </span>
                         @endif{{ __('Employee') }}
                     </th>
-                    <th class="text-left px-4 cursor-pointer" wire:click="ordenarPor('cliente_id')">
-                        @if ($ordenCampo === 'cliente_id')
+                    <th class="text-left px-4 cursor-pointer" wire:click="ordenarPor('cliente_name')">
+                        @if ($ordenCampo === 'cliente_name')
                             <span>
                                 @if ($ordenDireccion === 'asc')
                                     ▲

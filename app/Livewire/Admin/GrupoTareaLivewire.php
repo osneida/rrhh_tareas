@@ -12,6 +12,7 @@ use App\Models\Cliente;
 use App\Models\GrupoTarea;
 use App\Models\Tarea;
 use App\Models\User;
+use App\Enums\EstatusTareaEnum;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
@@ -25,11 +26,15 @@ class GrupoTareaLivewire extends Component
     public $search = '';
     public $sortField = 'id';
     public $sortDirection = 'desc';
+    public $filtroEstatus = '';
+    public $filtroEmpleado = '';
     public $isAdmin = false;
     public $perPage;
     public $paginacion;
 
+    public $selectEstatusTarea;
     public $allEmpleados = [];
+    public $tareasEmpleados = [];
     public $allClientes = [];
     public $losDias;
     public $dias = [];
@@ -44,7 +49,7 @@ class GrupoTareaLivewire extends Component
 
     public $descripcion, $fecha_inicio, $fecha_fin;
     public $tareas,  $tarea, $tarea_id;
-    public $estatus, $fecha, $horas = 1, $user_id, $cliente_id, $observacion, $grupo_tarea_id;
+    public $estatus, $fecha, $horas = 1, $user_id, $cliente_id, $cliente_name, $observacion, $grupo_tarea_id;
 
     protected $updatesQueryString = [
         ['search'  => ['except' => '']],
@@ -73,8 +78,28 @@ class GrupoTareaLivewire extends Component
         if ($this->grupo_tarea_id && !$this->dashboard) {
             $grupo = GrupoTarea::find($this->grupo_tarea_id);
             $tareasPaginadas = $grupo
-                ? $grupo->tareas()->orderBy($this->ordenCampo, $this->ordenDireccion)->paginate(10)
+                ? $grupo->tareas()
+                ->when($this->filtroEstatus, function ($query) {
+                    $query->where('estatus', $this->filtroEstatus);
+                })
+                ->when($this->filtroEmpleado, function ($query) {
+                    $query->where('user_id', $this->filtroEmpleado);
+                })
+                ->when($this->ordenCampo === 'user_name', function ($query) {
+                    $query->join('users', 'tareas.user_id', '=', 'users.id')
+                        ->select('tareas.*')
+                        ->orderBy('users.name', $this->ordenDireccion);
+                })
+                ->when($this->ordenCampo !== 'user_name', function ($query) {
+                    $query->orderBy($this->ordenCampo, $this->ordenDireccion);
+                })
+                ->paginate(10)
                 : null;
+
+            $this->cliente_name = $grupo->tareas->first()->cliente->name ?? null;
+            $this->tareasEmpleados = User::select('id', 'name')
+                ->whereIn('id', $grupo->tareas->pluck('user_id')->unique())
+                ->orderBy('name')->get();
         }
 
         return view('livewire.admin.grupo-tarea-livewire', [
@@ -88,6 +113,8 @@ class GrupoTareaLivewire extends Component
         $this->isAdmin = Auth::user() && Auth::user()->role === 'admin';
         $this->allEmpleados = User::select('id', 'name')->where('status', 1)->orderBy('name')->get();
         $this->allClientes  = Cliente::select('id', 'name')->where('status', 1)->orderBy('name')->get();
+        $this->selectEstatusTarea = EstatusTareaEnum::cases();
+
 
         $this->losDias = DiasEnum::cases();
         $this->perPage = PaginacionEnum::Diez->value; // Default pagination value
@@ -96,7 +123,7 @@ class GrupoTareaLivewire extends Component
 
     public function create()
     {
-        $this->reset(['grupo_tarea_id', 'tarea', 'estatus', 'fecha', 'horas', 'cliente_id', 'user_id', 'tarea_id', 'editMode', 'deleteMode', 'descripcion', 'fecha_inicio', 'fecha_fin','dias', 'observacion']);
+        $this->reset(['grupo_tarea_id', 'tarea', 'estatus', 'fecha', 'horas', 'cliente_id', 'user_id', 'tarea_id', 'editMode', 'deleteMode', 'descripcion', 'fecha_inicio', 'fecha_fin', 'dias', 'observacion']);
 
         $this->editMode   = false;
         $this->deleteMode = false;
@@ -223,6 +250,7 @@ class GrupoTareaLivewire extends Component
         $this->createMode = false;
         $this->showTarea = null;
         $this->dashboard = true;
+        $this->filtroEstatus = '';
     }
 
     public function closeModalGrupo()
@@ -231,12 +259,13 @@ class GrupoTareaLivewire extends Component
 
         $this->editTarea = false;
         $this->dashboard = false;
+        $this->deleteMode = false;
         $this->show($this->grupo_tarea_id);
     }
 
     public function confirmDelete($id)
     {
-       $tarea = Tarea::findOrFail($id);
+        $tarea = Tarea::findOrFail($id);
         $this->tarea_id = $tarea->id;
         $this->tarea = $tarea->tarea;
         $this->estatus = $tarea->estatus;
@@ -254,6 +283,4 @@ class GrupoTareaLivewire extends Component
 
         // Log::info([$this->tarea_id, $this->tarea,  $this->estatus,  $this->fecha,  $this->horas, $this->cliente_id,  $this->user_id,  $this->observacion]);
     }
-
-
 }
