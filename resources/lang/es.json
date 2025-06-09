@@ -150,5 +150,11 @@
     "Task Group Details": "Detalle del Grupo de Tareas",
     "Observation": "Observación",
     "Detail": "Detalle",
-    "Creation date":"Fecha de creación"
+    "Creation date":"Fecha de creación",
+    "Task Group List": "Lista de Grupos de Tareas",
+    "Task Group": "Grupo de Tareas",
+    "Error deleting group task": "Error al eliminar el grupo de tareas",
+    "Group task deleted successfully": "Grupo de tareas eliminado correctamente.",
+    "Confirm Task Group Deletion": "Confirmar Eliminación del Grupo de Tareas",
+    "Are you sure you want to delete this group and ALL its tasks?": "¿Está seguro que desea eliminar este grupo y TODAS sus tareas?"
 }

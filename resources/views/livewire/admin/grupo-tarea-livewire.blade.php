@@ -57,7 +57,7 @@
                                         title="{{ __('Edit') }}">
                                         <flux:icon.edit class="size-4" />
                                     </button>
-                                    <button wire:click="confirmDelete({{ $tarea->id }})"
+                                    <button wire:click="confirmDeleteGrupo({{ $tarea->id }})"
                                         class="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-700 text-xs"
                                         title="{{ __('Delete') }}">
                                         <flux:icon.delete class="size-4" />
@@ -204,7 +204,14 @@
 
     @if ($showTarea)
         <div class="bg-white dark:bg-zinc-900 rounded-lg shadow-xl w-full  p-6 relative">
-            <h2 class="text-xl font-bold mb-4 text-zinc-800 dark:text-zinc-100">{{ __('Task Group Details') }}</h2>
+            @if ($deleteGroupMode)
+                <h2 class="text-xl font-bold mb-4 text-zinc-800 dark:text-zinc-100">
+                    {{ __('Confirm Task Group Deletion') }}
+                </h2>
+            @else
+                <h2 class="text-xl font-bold mb-4 text-zinc-800 dark:text-zinc-100">{{ __('Task Group Details') }}
+                </h2>
+            @endif
             <div class="mb-3">
                 <p><strong>{{ __('Description') }} :</strong> {{ $descripcion }}</p>
                 <p><strong>{{ __('Start Date') }} :</strong> {{ $fecha_inicio }} | <strong>{{ __('End Date') }}
@@ -358,8 +365,22 @@
 
             </div>
 
-            <button type="button" wire:click="closeModal_grupo"
-                class="px-4 py-2 bg-zinc-500 text-white rounded hover:bg-zinc-600">{{ __('Back') }}</button>
+            @if ($deleteGroupMode)
+                <div class="text-red-600 font-semibold mb-4">
+                    {{ __('Are you sure you want to delete this group and ALL its tasks?') }}
+                </div>
+                <div class="mb-3">
+                    <button wire:click="deleteGrupo({{ $grupo_tarea_id }})"
+                        class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">{{ __('Delete') }}</button>
+                    <button type="button" wire:click="closeModalGrupo"
+                        class="px-4 py-2 bg-zinc-500 text-white rounded hover:bg-zinc-600">{{ __('Cancel') }}</button>
+                </div>
+            @else
+                <button type="button" wire:click="closeModal_grupo"
+                    class="px-4 py-2 bg-zinc-500 text-white rounded hover:bg-zinc-600">{{ __('Back') }}</button>
+            @endif
+
+
         </div>
     @endif
 

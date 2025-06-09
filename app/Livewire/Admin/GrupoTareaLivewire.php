@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use App\Livewire\Trait\TareaTrait;
+use Illuminate\Support\Facades\DB;
+use PhpParser\Node\Stmt\TryCatch;
 
 class GrupoTareaLivewire extends Component
 {
@@ -41,9 +43,10 @@ class GrupoTareaLivewire extends Component
 
     public $editMode   = false;
     public $createMode = false;
-    public $deleteMode = false;
     public $dashboard  = true;
-    public $editTarea = false;
+    public $editTarea  = false;
+    public $deleteMode = false;
+    public $deleteGroupMode = false;
 
     public $showTarea  = null;
 
@@ -134,37 +137,46 @@ class GrupoTareaLivewire extends Component
 
     public function store()
     {
-        $this->validate($this->reglasGrupoTarea());
-        $userIds = is_array($this->user_id) ? $this->user_id : [$this->user_id];
-        $diasSel = is_array($this->dias) ? $this->dias : [$this->dias];
+        try {
+            DB::beginTransaction();
+            $this->validate($this->reglasGrupoTarea());
+            $userIds = is_array($this->user_id) ? $this->user_id : [$this->user_id];
+            $diasSel = is_array($this->dias) ? $this->dias : [$this->dias];
 
-        $grupo_tarea = GrupoTarea::create([
-            'descripcion' => $this->descripcion,
-            'fecha_inicio' => $this->fecha_inicio,
-            'fecha_fin' => $this->fecha_fin,
-            'dias' => $diasSel
-        ]);
+            $grupo_tarea = GrupoTarea::create([
+                'descripcion' => $this->descripcion,
+                'fecha_inicio' => $this->fecha_inicio,
+                'fecha_fin' => $this->fecha_fin,
+                'dias' => $diasSel
+            ]);
 
-        // Obtener todas las fechas de los días seleccionados
-        $fechas_tareas = $this->obtenerFechasPorDias($this->fecha_inicio, $this->fecha_fin, $diasSel);
+            // Obtener todas las fechas de los días seleccionados
+            $fechas_tareas = $this->obtenerFechasPorDias($this->fecha_inicio, $this->fecha_fin, $diasSel);
 
-        foreach ($userIds as $uid) {
-            foreach ($fechas_tareas as $fecha) {
-                Tarea::create([
-                    'tarea'       => $this->tarea,
-                    'fecha'       => $fecha,
-                    'horas'       => $this->horas,
-                    'observacion' => $this->observacion,
-                    'user_id'     => $uid,
-                    'cliente_id'  => $this->cliente_id,
-                    'grupo_tarea_id' => $grupo_tarea->id
-                ]);
+            foreach ($userIds as $uid) {
+                foreach ($fechas_tareas as $fecha) {
+                    Tarea::create([
+                        'tarea'       => $this->tarea,
+                        'fecha'       => $fecha,
+                        'horas'       => $this->horas,
+                        'observacion' => $this->observacion,
+                        'user_id'     => $uid,
+                        'cliente_id'  => $this->cliente_id,
+                        'grupo_tarea_id' => $grupo_tarea->id
+                    ]);
+                }
             }
-        }
-        $this->dashboard  = true;
-        $this->createMode = false;
+            DB::commit();
+            $this->dashboard  = true;
+            $this->createMode = false;
 
-        session()->flash('success', __('Tasks created successfully'));
+            session()->flash('success', __('Tasks created successfully'));
+        } catch (\Throwable $th) {
+            DB::rollback();
+            Log::error('Error en store: ' . $th->getMessage());
+            session()->flash('error', __('Error creating tasks'));
+            throw $th;
+        }
     }
 
     public function show($id)
@@ -247,6 +259,7 @@ class GrupoTareaLivewire extends Component
     {
         $this->editMode   = false;
         $this->deleteMode = false;
+        $this->deleteGroupMode = false;
         $this->createMode = false;
         $this->showTarea = null;
         $this->dashboard = true;
@@ -260,6 +273,7 @@ class GrupoTareaLivewire extends Component
         $this->editTarea = false;
         $this->dashboard = false;
         $this->deleteMode = false;
+        $this->deleteGroupMode = false;
         $this->show($this->grupo_tarea_id);
     }
 
@@ -282,5 +296,46 @@ class GrupoTareaLivewire extends Component
         $this->dashboard = false;
 
         // Log::info([$this->tarea_id, $this->tarea,  $this->estatus,  $this->fecha,  $this->horas, $this->cliente_id,  $this->user_id,  $this->observacion]);
+    }
+
+    public function confirmDeleteGrupo($id)
+    {
+        $this->showTarea = $grupo = GrupoTarea::findOrFail($id);
+        $this->grupo_tarea_id = $grupo->id;
+        $this->descripcion = $grupo->descripcion;
+        $this->fecha_inicio = $grupo->fecha_inicio;
+        $this->fecha_fin = $grupo->fecha_fin;
+        $this->dias = $grupo->dias;
+
+        $this->deleteGroupMode = true;
+
+        $this->deleteMode = false;
+        $this->editMode   = false;
+        $this->createMode = false;
+        $this->dashboard = false;
+    }
+
+    public function deleteGrupo()
+    {
+        try {
+            DB::beginTransaction();
+            $grupo = GrupoTarea::findOrFail($this->grupo_tarea_id);
+            $grupo->tareas()->delete(); // Eliminar todas las tareas asociadas
+            $grupo->delete();
+
+            DB::commit();
+            session()->flash('success', __('Group task deleted successfully'));
+            $this->closeModal_grupo();
+        } catch (\Throwable $th) {
+            DB::rollback();
+            Log::error('Error en deleteGrupo: ' . $th->getMessage());
+            session()->flash('error', __('Error deleting group task'));
+        }
+    }
+
+    public function updatedPaginacion($value)
+    {
+        $this->perPage = $value;
+        $this->resetPage();
     }
 }

@@ -10,9 +10,8 @@ return new class extends Migration
     {
         Schema::create('jornada_laborals', function (Blueprint $table) {
             $table->id();
-            $table->date('fecha_inicio');
+            $table->date('fecha');
             $table->time('hora_inicio');
-            $table->date('fecha_fin')->nullable();
             $table->time('hora_fin')->nullable();
             $table->foreignId('tarea_id')->unique()->constrained();
             $table->timestamps();
