@@ -6,7 +6,7 @@
 </head>
 
 <body class="min-h-screen bg-white dark:bg-zinc-800">
-    <flux:sidebar sticky stashable class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
+    <flux:sidebar sticky stashable class="border-e border-zinc-200 bg-zinc-200 dark:border-zinc-700 dark:bg-zinc-900">
         <flux:sidebar.toggle class="lg:hidden" icon="x-mark" />
 
         <a href="{{ route('dashboard') }}" class="me-5 flex items-center space-x-2 rtl:space-x-reverse" wire:navigate>
@@ -47,7 +47,7 @@
                     <flux:navlist.item icon="bars-3" :href="route('tarea-grupo.index')"
                         :current="request()->routeIs('tarea-grupo.index')" wire:navigate>{{ __('Tasks by Group') }}
                     </flux:navlist.item>
-                    <flux:navlist.item icon="bars-3" :href="route('clientes.index')"
+                    <flux:navlist.item icon="users" :href="route('clientes.index')"
                         :current="request()->routeIs('clientes.index')" wire:navigate>{{ __('Clients') }}
                     </flux:navlist.item>
                     <flux:navlist.item icon="user" :href="route('empleados.index')"

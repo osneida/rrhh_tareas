@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Cliente;
 use App\Models\User;
+use App\Models\JornadaLaboral;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Tarea extends Model
@@ -37,5 +38,34 @@ class Tarea extends Model
     public function grupo(): HasMany
     {
         return $this->hasMany(GrupoTarea::class);
+    }
+
+    public static function horasIniciada()
+    {
+        return Tarea::where('estatus', 'Iniciada')->sum('horas');
+    }
+
+    public static function horasPendientes()
+    {
+        return Tarea::where('estatus', 'Pendiente')->sum('horas');
+    }
+
+    public static function horasCompletada()
+    {
+        return Tarea::where('estatus', 'Finalizada')->sum('horas');
+    }
+
+    public static function total_tareas()
+    {
+        return Tarea::count();
+    }
+
+    public function jornada_sintarea()
+    {
+        return $this->hasOne(JornadaLaboral::class, 'tarea_id')->withDefault([
+            'hora_inicio' => null,
+            'hora_fin' => null,
+            'tarea_id' => null,
+        ]);
     }
 }
