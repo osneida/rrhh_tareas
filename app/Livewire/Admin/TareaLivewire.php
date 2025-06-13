@@ -104,8 +104,6 @@ class TareaLivewire extends Component
         }
     }
 
-
-
     public function create()
     {
         $this->reset(['tarea', 'estatus', 'fecha', 'horas', 'cliente_id', 'user_id', 'observacion', 'tarea_id', 'editMode', 'deleteMode']);
@@ -164,6 +162,7 @@ class TareaLivewire extends Component
                 'estatus'    => $this->estatus,
                 'fecha'      => $this->fecha,
                 'horas'      => $this->horas,
+                'observacion'=> $this->observacion,
                 'cliente_id' => $this->cliente_id,
                 'user_id'    => $this->user_id ?: null, // Si está vacío, lo pone en null
             ]);

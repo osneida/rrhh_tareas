@@ -156,5 +156,12 @@
     "Error deleting group task": "Error al eliminar el grupo de tareas",
     "Group task deleted successfully": "Grupo de tareas eliminado correctamente.",
     "Confirm Task Group Deletion": "Confirmar Eliminación del Grupo de Tareas",
-    "Are you sure you want to delete this group and ALL its tasks?": "¿Está seguro que desea eliminar este grupo y TODAS sus tareas?"
+    "Are you sure you want to delete this group and ALL its tasks?": "¿Está seguro que desea eliminar este grupo y TODAS sus tareas?",
+    "No tasks for today": "No hay tareas para hoy",
+    "Working day": "Jornada laboral",
+    "Workers": "Trabajadores",
+    "My Tasks": "Mis Tareas",
+    "My Days": "Mis Jornadas",
+    "Summary of hours":"Resumen de horas"
+
 }

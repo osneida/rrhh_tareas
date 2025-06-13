@@ -53,10 +53,27 @@
                     <flux:navlist.item icon="user" :href="route('empleados.index')"
                         :current="request()->routeIs('empleados.index')" wire:navigate>{{ __('Employees') }}
                     </flux:navlist.item>
+                     <flux:navlist.item icon="clock" :href="route('jornada-laboral.index')"
+                        :current="request()->routeIs('jornada-laboral.index')" wire:navigate>{{ __('Working day') }}
+                    </flux:navlist.item>
+                    <flux:navlist.item icon="bars-2" :href="route('horas-trabajadas.index')"
+                        :current="request()->routeIs('horas-trabajadas.index')" wire:navigate>{{ __('Summary of hours') }}
+                    </flux:navlist.item>
                 </flux:navlist.group>
             @endif
         </flux:navlist>
 
+
+               <flux:navlist variant="outline">
+                <flux:navlist.group :heading="__('Workers')" class="grid">
+                    <flux:navlist.item icon="bars-3" :href="route('mis-tareas')"
+                        :current="request()->routeIs('mis-tareas')" wire:navigate>{{ __('My Tasks') }}
+                    </flux:navlist.item>
+                    <flux:navlist.item icon="clock" :href="route('mis-jornadas')"
+                        :current="request()->routeIs('mis-jornadas')" wire:navigate>{{ __('My Days') }}
+                    </flux:navlist.item>
+                </flux:navlist.group>
+        </flux:navlist>
 
         <flux:spacer />
 
