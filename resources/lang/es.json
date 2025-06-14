@@ -150,7 +150,7 @@
     "Task Group Details": "Detalle del Grupo de Tareas",
     "Observation": "Observación",
     "Detail": "Detalle",
-    "Creation date":"Fecha de creación",
+    "Creation date": "Fecha de creación",
     "Task Group List": "Lista de Grupos de Tareas",
     "Task Group": "Grupo de Tareas",
     "Error deleting group task": "Error al eliminar el grupo de tareas",
@@ -162,6 +162,10 @@
     "Workers": "Trabajadores",
     "My Tasks": "Mis Tareas",
     "My Days": "Mis Jornadas",
-    "Summary of hours":"Resumen de horas"
+    "Summary of hours": "Resumen de horas",
+    "Start Hour": "Hora inicio",
+    "End Hours": "Hora fin",
+    "Total Hours": "Total horas",
+    "No records found": "No se encontraron registros"
 
 }

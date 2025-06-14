@@ -9,6 +9,7 @@ use App\Models\Cliente;
 use App\Models\User;
 use App\Models\JornadaLaboral;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Tarea extends Model
 {
@@ -38,6 +39,11 @@ class Tarea extends Model
     public function grupo(): HasMany
     {
         return $this->hasMany(GrupoTarea::class);
+    }
+
+    public function jornada(): HasOne
+    {
+        return $this->hasOne(JornadaLaboral::class);
     }
 
     public static function horasIniciada()

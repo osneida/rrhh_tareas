@@ -67,7 +67,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-4 py-2 text-center text-gray-500">No hay Tareas</td>
+                            <td colspan="6" class="px-4 py-2 text-center text-gray-500"> {{ __('No records found.') }}</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -343,8 +343,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="8" class="text-center py-4 text-zinc-500">No hay tareas
-                                        registradas.</td>
+                                    <td colspan="8" class="text-center py-4 text-zinc-500"> {{ __('No records found.') }}</td>
                                 </tr>
                             @endforelse
                         </tbody>

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class JornadaLaboral extends Model
 {
@@ -17,9 +17,9 @@ class JornadaLaboral extends Model
         'tarea_id'
     ];
 
-    public function tarea(): HasOne
+    public function tarea(): BelongsTo
     {
-        return $this->hasOne(Tarea::class);
+        return $this->belongsTo(Tarea::class);
     }
 }
 
