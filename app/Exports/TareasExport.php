@@ -48,7 +48,6 @@ class TareasExport implements FromCollection, WithHeadings, WithMapping
             'Nombre Empleado',
             'Cliente_id',
             'Nombre Cliente',
-
         ];
     }
 }
