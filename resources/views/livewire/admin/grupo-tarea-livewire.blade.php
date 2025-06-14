@@ -100,7 +100,7 @@
                             label="{{ __('Group Description') }}" placeholder="{{ __('Group Description') }}" />
 
                     </div>
-                    =============
+                        <hr class="m-4">
                     <h2 class="text-xl font-bold mb-4 text-zinc-800 dark:text-zinc-100">{{ __('New Tasks') }}</h2>
 
                     <div class="mb-3">

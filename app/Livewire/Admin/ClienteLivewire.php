@@ -65,7 +65,7 @@ class ClienteLivewire extends Component
 
             return view('livewire.admin.cliente-livewire', compact('clientes'));
         } catch (\Throwable $th) {
-            Log::error('Error en update: ' . $th->getMessage());
+            Log::error('Error en render: ' . $th->getMessage());
             throw $th;
         }
     }

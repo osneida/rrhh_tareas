@@ -18,7 +18,6 @@ use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use App\Livewire\Trait\TareaTrait;
 use Illuminate\Support\Facades\DB;
-use PhpParser\Node\Stmt\TryCatch;
 
 class GrupoTareaLivewire extends Component
 {

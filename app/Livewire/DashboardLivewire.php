@@ -2,8 +2,10 @@
 
 namespace App\Livewire;
 
+use App\Enums\EstatusTareaEnum;
 use App\Models\JornadaLaboral;
 use App\Models\Tarea;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -69,42 +71,62 @@ class DashboardLivewire extends Component
 
     public function guardar_hora_inicio($tarea)
     {
-        date_default_timezone_set("Europe/Madrid");
-        $this->hora_inicio = date("H:i:s");
+        try {
+            DB::beginTransaction();
 
-        JornadaLaboral::updateOrCreate(
-            ['tarea_id' => $tarea],
-            [
-                'fecha'        => date("y/m/d"),
-                'hora_inicio'  => $this->hora_inicio,
-            ]
-        );
+            date_default_timezone_set("Europe/Madrid");
+            $this->hora_inicio = date("H:i:s");
 
-        $this->enables_inicio[$tarea] = 'disabled';
-        $this->enables_fin[$tarea] = 'enabled';
+            JornadaLaboral::updateOrCreate(
+                ['tarea_id' => $tarea],
+                [
+                    'fecha'        => date("y/m/d"),
+                    'hora_inicio'  => $this->hora_inicio,
+                ]
+            );
 
-        $tarea_update = Tarea::findOrFail($tarea);
-        $tarea_update->update(['estatus' => 'Iniciada']);
+            $this->enables_inicio[$tarea] = 'disabled';
+            $this->enables_fin[$tarea] = 'enabled';
 
-        $this->horasIniciadas += $tarea_update->horas;
-        $this->horasPendientes -= $tarea_update->horas;
+            $tarea_update = Tarea::findOrFail($tarea);
+            $tarea_update->update(['estatus' => EstatusTareaEnum::Iniciada->value]);
+
+            $this->horasIniciadas += $tarea_update->horas;
+            $this->horasPendientes -= $tarea_update->horas;
+             DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error al guardar_hora_inicio: ' . $e->getMessage());
+            return;
+        }
     }
 
     public function guardar_hora_fin($tarea)
     {
-        date_default_timezone_set("Europe/Madrid");
-        $this->hora_fin = date("H:i:s");
+        try {
+            DB::beginTransaction();
 
-        $jl = JornadaLaboral::where('tarea_id', $tarea);
-        $jl->update(['hora_fin' => $this->hora_fin]);
+            date_default_timezone_set("Europe/Madrid");
+            $this->hora_fin = date("H:i:s");
 
-        $this->enables_inicio[$tarea] = 'disabled';
-        $this->enables_fin[$tarea] = 'disabled';
+            $jl = JornadaLaboral::where('tarea_id', $tarea);
+            $jl->update(['hora_fin' => $this->hora_fin]);
 
-        $tarea_update = Tarea::find($tarea);
-        $tarea_update->update(['estatus' => 'Finalizada']);
+            $this->enables_inicio[$tarea] = 'disabled';
+            $this->enables_fin[$tarea] = 'disabled';
 
-        $this->horasIniciadas -= $tarea_update->horas;
-        $this->horasCompletadas += $tarea_update->horas;
+            $tarea_update = Tarea::find($tarea);
+            $tarea_update->update(['estatus' => EstatusTareaEnum::Finalizada->value]);
+
+            $this->horasIniciadas -= $tarea_update->horas;
+            $this->horasCompletadas += $tarea_update->horas;
+
+            DB::commit();
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error al guardar_hora_fin: ' . $e->getMessage());
+            session()->flash('error', __('An error occurred while finishing the task.'));
+        }
     }
 }

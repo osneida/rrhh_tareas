@@ -166,6 +166,8 @@
     "Start Hour": "Hora inicio",
     "End Hours": "Hora fin",
     "Total Hours": "Total horas",
-    "No records found": "No se encontraron registros"
+    "No records found": "No se encontraron registros",
+    "Edit Working day": "Editar Jornada Laboral",
+    "Working day updated successfully": "Jornada actualizado correctamente"
 
 }
