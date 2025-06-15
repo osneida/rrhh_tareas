@@ -45,6 +45,8 @@
     "Create Task Group": "Crear Grupo de Tareas",
     "Export Excel": "Exportar Excel",
     "Search task or date...": "Buscar tarea o fecha...",
+    "Search month ...": "Buscar  mes ...",
+
     "All Statuses": "Todos los Estatus",
     "Pending": "Pendiente",
     "Started": "Iniciada",
@@ -159,15 +161,19 @@
     "Are you sure you want to delete this group and ALL its tasks?": "¿Está seguro que desea eliminar este grupo y TODAS sus tareas?",
     "No tasks for today": "No hay tareas para hoy",
     "Working day": "Jornada laboral",
+    "Working day List": "Lista de Jornadas laborales",
     "Workers": "Trabajadores",
     "My Tasks": "Mis Tareas",
-    "My Days": "Mis Jornadas",
+    "My Days": "Mis Jornadas Laboral",
     "Summary of hours": "Resumen de horas",
     "Start Hour": "Hora inicio",
     "End Hours": "Hora fin",
     "Total Hours": "Total horas",
     "No records found": "No se encontraron registros",
     "Edit Working day": "Editar Jornada Laboral",
-    "Working day updated successfully": "Jornada actualizado correctamente"
+    "Working day updated successfully": "Jornada actualizado correctamente",
+    "Total hours employed per month": "Total de horas trabajadas por mes",
+    "Month": "Mes",
+    "Total employees, month":"Total empleados, mes"
 
 }

@@ -1,6 +1,6 @@
 <div class="p-6">
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-        <flux:heading size="xl">{{ __('Task List') }}</flux:heading>
+        <flux:heading size="xl">{{ __('My Tasks') }}</flux:heading>
 
     </div>
     <div class="grid grid-cols-1 md:grid-cols-5 gap-5 mb-6">

@@ -2,7 +2,7 @@
 
     @if (!$editMode)
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-            <flux:heading size="xl">{{ __('Working day') }}</flux:heading>
+            <flux:heading size="xl">{{ __('Working day List') }}</flux:heading>
             <div class="flex gap-2">
                 <button wire:click="exportExcel"
                     class="px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700 transition">{{ __('Export Excel') }}
@@ -57,20 +57,20 @@
                 </thead>
                 <tbody>
                     @forelse ($jornadaslb as $jornada)
-                        <tr class="border-b border-zinc-200 dark:border-zinc-700">
-                            <td class="px-4 py-2">{{ $loop->iteration  }}</td>
-                            <td class="px-4 py-2">{{ $jornada->tarea->user->name ?? '-' }}</td>
-                            <td class="px-4 py-2">{{ $jornada->fecha }}</td>
-                            <td class="px-4 py-2">{{ $jornada->hora_inicio }}</td>
-                            <td class="px-4 py-2">{{ $jornada->hora_fin }}</td>
-                            <td class="px-4 py-2">{{ $jornada->horas_transcurridas }} :
+                        <tr class="border-t border-zinc-200 dark:border-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-800">
+                            <td class="px-4">{{ $loop->iteration  }}</td>
+                            <td>{{ $jornada->tarea->user->name ?? '-' }}</td>
+                            <td class="px-1 whitespace-nowrap">{{ $jornada->fecha }}</td>
+                            <td class="px-2">{{ $jornada->hora_inicio }}</td>
+                            <td>{{ $jornada->hora_fin }}</td>
+                            <td>{{ $jornada->horas_transcurridas }} :
                                 {{ $jornada->minutos_transcurridos }}</td>
-                            <td class="px-4 py-2">{{ $jornada->tarea->cliente->name ?? '-' }}</td>
-                            <td class="px-4 py-2">{{ $jornada->tarea->tarea ?? '-' }}</td>
-                            <td class="px-4 py-2">
+                            <td>{{ $jornada->tarea->cliente->name ?? '-' }}</td>
+                            <td>{{ $jornada->tarea->tarea ?? '-' }}</td>
+                            <td>
                                 @if ($isAdmin)
                                     <button wire:click="edit({{ $jornada->id }})"
-                                        class="px-2 py-1 bg-emerald-500 text-white rounded hover:bg-emerald-600 text-xs"
+                                        class="px-2 bg-emerald-500 text-white rounded hover:bg-emerald-600 text-xs"
                                         title="{{ __('Edit') }}">
                                         <flux:icon.edit class="size-4" />
                                     </button>

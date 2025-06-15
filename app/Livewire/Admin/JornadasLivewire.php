@@ -30,9 +30,7 @@ class JornadasLivewire extends Component
     public $editMode = false;
     public $allEmpleados = [];
     public $allClientes = [];
-    public $selectStatus;
     public $paginacion;
-    public $selectEstatusTarea;
     public $perPage;
     public $ordenCampo = 'fecha';
     public $ordenDireccion = 'desc';
@@ -56,7 +54,6 @@ class JornadasLivewire extends Component
 
         $this->paginacion = PaginacionEnum::cases();
         $this->perPage = PaginacionEnum::Diez->value; // Default pagination value
-        $this->selectEstatusTarea = EstatusTareaEnum::cases();
     }
 
 
