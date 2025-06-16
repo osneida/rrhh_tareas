@@ -27,11 +27,11 @@
                 <thead>
                     <tr class="bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200">
                         @foreach (['id' => '#', 'descripcion' => __('Description'), 'created_at' => __('Creation date')] as $field => $label)
-                            <th class="text-left px-1 py-1 cursor-pointer" wire:click="sortBy('{{ $field }}')">
+                            <th class="text-left px-1 py-1 cursor-pointer" wire:click="ordenarPor('{{ $field }}')">
                                 {{ $label }}
-                                @if ($sortField === $field)
+                                @if ($ordenCampo === $field)
                                     <span>
-                                        @if ($sortDirection === 'asc')
+                                        @if ($ordenDireccion === 'asc')
                                             ▲
                                         @else
                                             ▼

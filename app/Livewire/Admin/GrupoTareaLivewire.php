@@ -13,6 +13,7 @@ use App\Models\GrupoTarea;
 use App\Models\Tarea;
 use App\Models\User;
 use App\Enums\EstatusTareaEnum;
+use App\Livewire\Trait\FuncionesTrait;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
@@ -22,16 +23,10 @@ use Illuminate\Support\Facades\DB;
 class GrupoTareaLivewire extends Component
 {
 
-    use WithPagination, TareaTrait;
+    use WithPagination, TareaTrait, FuncionesTrait;
 
-    public $search = '';
-    public $sortField = 'id';
-    public $sortDirection = 'desc';
     public $filtroEstatus = '';
     public $filtroEmpleado = '';
-    public $isAdmin = false;
-    public $perPage;
-    public $paginacion;
 
     public $selectEstatusTarea;
     public $allEmpleados = [];
@@ -73,7 +68,7 @@ class GrupoTareaLivewire extends Component
                         ->orWhere('created_at', 'like', "%{$this->search}%");
                 })
             )
-            ->orderBy($this->sortField, $this->sortDirection)
+            ->orderBy($this->ordenCampo, $this->ordenDireccion)
             ->paginate($this->perPage);
 
         $tareasPaginadas = null;
@@ -216,16 +211,6 @@ class GrupoTareaLivewire extends Component
         } catch (\Throwable $th) {
             Log::error('Error en update: ' . $th->getMessage());
             throw $th;
-        }
-    }
-
-    public function sortBy($field)
-    {
-        if ($this->sortField === $field) {
-            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
-        } else {
-            $this->sortField = $field;
-            $this->sortDirection = 'asc';
         }
     }
 

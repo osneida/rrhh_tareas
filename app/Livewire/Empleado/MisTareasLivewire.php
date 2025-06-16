@@ -4,6 +4,7 @@ namespace App\Livewire\Empleado;
 
 use App\Enums\EstatusTareaEnum;
 use App\Enums\PaginacionEnum;
+use App\Livewire\Trait\FuncionesTrait;
 use App\Livewire\Trait\TareaTrait;
 use App\Models\Cliente;
 use App\Models\Tarea;
@@ -15,16 +16,14 @@ use Illuminate\Support\Facades\Log;
 
 class MisTareasLivewire extends Component
 {
-    use WithPagination, TareaTrait;
+    use WithPagination, TareaTrait, FuncionesTrait;
 
     public $isAdmin = false;
     public $allClientes = [];
-    public $perPage;
 
     public $selectStatus;
     public $paginacion;
     public $selectEstatusTarea;
-    public $search = '';
     public $filtroEstatus = '';
     public $filtroCliente = '';
     public $tareas;

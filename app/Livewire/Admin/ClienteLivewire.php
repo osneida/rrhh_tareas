@@ -10,27 +10,19 @@ use Livewire\Component;
 use App\Models\Cliente;
 use App\Enums\StatusEnum;
 use App\Enums\PaginacionEnum;
+use App\Livewire\Trait\FuncionesTrait;
 
 class ClienteLivewire extends Component
 {
-    use WithPagination;
+    use WithPagination, FuncionesTrait;
 
     public $name, $address, $cif, $mail, $phone, $status, $cliente_id;
-    public $isAdmin = false;
-    public $search = '';
     public $filtroEstatus = '';
-
-    public $perPage;
-    public $ordenCampo = 'id';
-    public $ordenDireccion = 'desc';
-
     public $showCliente;
     public $showModal = false;
     public $editMode = false;
     public $deleteMode = false;
-
     public $selectStatus;
-    public $paginacion;
 
     public function mount()
     {
@@ -67,17 +59,6 @@ class ClienteLivewire extends Component
         } catch (\Throwable $th) {
             Log::error('Error en render: ' . $th->getMessage());
             throw $th;
-        }
-    }
-
-    // MÉTODO PARA ORDENAR POR COLUMNA
-    public function ordenarPor($campo)
-    {
-        if ($this->ordenCampo === $campo) {
-            $this->ordenDireccion = $this->ordenDireccion === 'asc' ? 'desc' : 'asc';
-        } else {
-            $this->ordenCampo = $campo;
-            $this->ordenDireccion = 'asc';
         }
     }
 

@@ -11,23 +11,18 @@ use Livewire\WithPagination;
 use App\Enums\RoleEnum;
 use App\Enums\StatusEnum;
 use App\Enums\PaginacionEnum;
+use App\Livewire\Trait\FuncionesTrait;
 
 class UserLivewire extends Component
 {
-    use WithPagination;
+    use WithPagination, FuncionesTrait;
 
-    public $search = '';
-    public $sortField = 'name';
-    public $sortDirection = 'asc';
-    public $isAdmin = false;
-    public $perPage;
     public $editMode = false;
     public $createMode = false;
     public $status = '';
 
     public $selectStatus;
     public $roles;
-    public $paginacion;
 
     public $deleteMode = false;
     public $showModal = false;
@@ -38,8 +33,8 @@ class UserLivewire extends Component
         ['search' => ['except' => '']],
         ['status' => ['except' => '']],
         ['perPage' => ['except' => PaginacionEnum::Diez->value]],
-        ['sortField' => ['except' => 'name']],
-        ['sortDirection' => ['except' => 'asc']],
+        ['ordenCampo' => ['except' => 'name']],
+        ['ordenDireccion' => ['except' => 'asc']],
     ];
 
     public function updatingSearch()
@@ -52,16 +47,6 @@ class UserLivewire extends Component
         $this->resetPage();
     }
 
-    public function sortBy($field)
-    {
-        if ($this->sortField === $field) {
-            $this->sortDirection = $this->sortDirection === 'asc' ? 'desc' : 'asc';
-        } else {
-            $this->sortField = $field;
-            $this->sortDirection = 'asc';
-        }
-    }
-
     public function toggleStatus(User $user)
     {
         $user->status = !$user->status;
@@ -72,6 +57,9 @@ class UserLivewire extends Component
 
     public function mount()
     {
+        $this->ordenCampo = 'name';
+        $this->ordenDireccion = 'asc';
+
         $this->isAdmin = Auth::user() && Auth::user()->role === 'admin';
         $this->roles = RoleEnum::cases();
         $this->selectStatus = StatusEnum::cases();
@@ -94,7 +82,7 @@ class UserLivewire extends Component
             ->when($this->status !== '', function ($q) {
                 $q->where('status', (int)$this->status);
             })
-            ->orderBy($this->sortField, $this->sortDirection)
+            ->orderBy($this->ordenCampo, $this->ordenDireccion)
             ->paginate($this->perPage);
 
 

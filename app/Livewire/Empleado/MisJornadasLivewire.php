@@ -4,28 +4,19 @@ namespace App\Livewire\Empleado;
 
 use Livewire\Component;
 use App\Enums\PaginacionEnum;
+use App\Livewire\Trait\FuncionesTrait;
 use App\Models\Cliente;
 use App\Models\JornadaLaboral;
-use App\Models\Tarea;
-use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Livewire\WithPagination;
 
 class MisJornadasLivewire extends Component
 {
-    use WithPagination;
+    use WithPagination, FuncionesTrait;
 
-    public $search = '';
     public $filtroCliente = '';
-    public $isAdmin = false;
-
     public $allClientes = [];
-    public $paginacion;
-    public $perPage;
-    public $ordenCampo = 'fecha';
-    public $ordenDireccion = 'desc';
-
 
     public function render()
     {
@@ -39,6 +30,8 @@ class MisJornadasLivewire extends Component
 
     public function mount()
     {
+        $this->ordenCampo = 'fecha';
+        $this->ordenDireccion = 'desc';
         $this->paginacion = PaginacionEnum::cases();
         $this->perPage = PaginacionEnum::Diez->value; // Default pagination value
     }
@@ -113,13 +106,4 @@ class MisJornadasLivewire extends Component
         return $query;
     }
 
-    public function ordenarPor($campo)
-    {
-        if ($this->ordenCampo === $campo) {
-            $this->ordenDireccion = $this->ordenDireccion === 'asc' ? 'desc' : 'asc';
-        } else {
-            $this->ordenCampo = $campo;
-            $this->ordenDireccion = 'asc';
-        }
-    }
 }

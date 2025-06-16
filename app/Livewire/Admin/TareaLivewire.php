@@ -14,17 +14,17 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use App\Enums\EstatusTareaEnum;
 use App\Enums\PaginacionEnum;
+use App\Livewire\Trait\FuncionesTrait;
 use App\Livewire\Trait\TareaTrait;
 
 class TareaLivewire extends Component
 {
-    use WithPagination, TareaTrait;
+    use WithPagination, TareaTrait, FuncionesTrait;
 
     public $tareas, $tarea, $tarea_id;
     public $estatus, $fecha, $horas = 1, $user_id, $cliente_id, $observacion;
 
     //  PROPIEDADES PARA FILTROS Y ORDEN
-    public $search = '';
     public $filtroEstatus = '';
     public $filtroEmpleado = '';
     public $filtroCliente = '';
@@ -34,11 +34,8 @@ class TareaLivewire extends Component
     public $deleteMode = false;
     public $allEmpleados = [];
     public $allClientes = [];
-    public $isAdmin = false;
-    public $perPage;
 
     public $selectStatus;
-    public $paginacion;
     public $selectEstatusTarea;
 
     public function mount()
@@ -209,7 +206,7 @@ class TareaLivewire extends Component
     {
         $fileName = 'tareas_' . now()->format('Y-m-d_H-i-s') . '.xlsx';
         $query = $this->buildQuery();
-        $data = $query->get(); // Reutilizar la lógica de la consulta y obtener los datos
+        $data = $query->get();
 
         return Excel::download(
             new TareasExport($data),

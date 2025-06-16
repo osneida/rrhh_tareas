@@ -8,41 +8,34 @@ use App\Models\JornadaLaboral;
 use Livewire\WithPagination;
 use App\Enums\PaginacionEnum;
 use App\Exports\HorasTrabajadasExport;
+use App\Livewire\Trait\FuncionesTrait;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
-
 class HorasTrabajadas extends Component
 {
-    use WithPagination;
-    public $search = '';
+    use WithPagination, FuncionesTrait;
+
     public $filtroEmpleado = '';
-    public $isAdmin = false;
     public $allEmpleados = [];
-    public $paginacion;
-    public $perPage;
-    public $ordenCampo = 'mes';
-    public $ordenDireccion = 'desc';
 
     public function render()
     {
-
         $query = $this->buildQuery();
         $tiempo_transcurrido = $query->paginate($this->perPage);
-
 
         return view('livewire.admin.horas-trabajadas', compact('tiempo_transcurrido'));
     }
 
     public function mount()
     {
+        $this->ordenCampo = 'mes';
         $this->allEmpleados = User::select('id', 'name')->orderBy('name')->get();
         $this->isAdmin = Auth::user() && Auth::user()->role === 'admin';
 
         $this->paginacion = PaginacionEnum::cases();
         $this->perPage = PaginacionEnum::Diez->value; // Default pagination value
     }
-
 
     private function buildQuery()
     {
@@ -93,16 +86,5 @@ class HorasTrabajadas extends Component
             new HorasTrabajadasExport($data),
             $fileName
         );
-    }
-
-
-    public function ordenarPor($campo)
-    {
-        if ($this->ordenCampo === $campo) {
-            $this->ordenDireccion = $this->ordenDireccion === 'asc' ? 'desc' : 'asc';
-        } else {
-            $this->ordenCampo = $campo;
-            $this->ordenDireccion = 'asc';
-        }
     }
 }

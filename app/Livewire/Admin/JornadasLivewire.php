@@ -6,6 +6,7 @@ use App\Enums\EstatusTareaEnum;
 use App\Enums\PaginacionEnum;
 use App\Exports\JornadaLaboralExport;
 use App\Http\Requests\JornadaLaboralRequest;
+use App\Livewire\Trait\FuncionesTrait;
 use App\Models\Cliente;
 use App\Models\JornadaLaboral;
 use App\Models\Tarea;
@@ -19,25 +20,21 @@ use Illuminate\Support\Facades\Log;
 
 class JornadasLivewire extends Component
 {
-    use WithPagination;
+    use WithPagination, FuncionesTrait;
 
     public $jornadas, $jornada_id, $tarea, $empleado, $cliente;
     public $fecha, $hora_inicio, $hora_fin, $tarea_id;
-    public $search = '';
+
     public $filtroEmpleado = '';
     public $filtroCliente = '';
-    public $isAdmin = false;
+
     public $editMode = false;
     public $allEmpleados = [];
     public $allClientes = [];
-    public $paginacion;
-    public $perPage;
-    public $ordenCampo = 'fecha';
-    public $ordenDireccion = 'desc';
+
 
     public function render()
     {
-
         $query = $this->buildQuery();
         $jornadaslb = $query->paginate($this->perPage);
 
@@ -48,6 +45,8 @@ class JornadasLivewire extends Component
 
     public function mount()
     {
+        $this->ordenCampo = 'fecha';
+
         $this->allEmpleados = User::select('id', 'name')->orderBy('name')->get();
         $this->allClientes  = Cliente::select('id', 'name')->orderBy('name')->get();
         $this->isAdmin = Auth::user() && Auth::user()->role === 'admin';
@@ -114,6 +113,8 @@ class JornadasLivewire extends Component
                 DB::raw('MINUTE(TIMEDIFF(hora_fin, hora_inicio)) as minutos_transcurridos')
             )
                 ->orderByRaw('HOUR(TIMEDIFF(hora_fin, hora_inicio)) ' . $this->ordenDireccion . ', MINUTE(TIMEDIFF(hora_fin, hora_inicio)) ' . $this->ordenDireccion);
+        } elseif ($this->ordenCampo === 'tarea') {
+            $query->orderBy('tareas.tarea', $this->ordenDireccion);
         } else {
             $query->orderBy('jornada_laborals.' . $this->ordenCampo, $this->ordenDireccion);
         }
@@ -170,16 +171,6 @@ class JornadasLivewire extends Component
             DB::rollBack();
             Log::error('Error en update JornadaLaboral: ' . $th->getMessage());
             throw $th;
-        }
-    }
-
-    public function ordenarPor($campo)
-    {
-        if ($this->ordenCampo === $campo) {
-            $this->ordenDireccion = $this->ordenDireccion === 'asc' ? 'desc' : 'asc';
-        } else {
-            $this->ordenCampo = $campo;
-            $this->ordenDireccion = 'asc';
         }
     }
 
