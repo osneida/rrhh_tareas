@@ -15,6 +15,22 @@ jobs:
     runs-on: ubuntu-latest
     environment: Testing
 
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: rrhh_testing
+          MYSQL_USER: osneidab
+          MYSQL_PASSWORD: 12345678
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
