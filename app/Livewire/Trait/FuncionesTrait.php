@@ -22,4 +22,14 @@ trait FuncionesTrait
             $this->ordenDireccion = 'asc';
         }
     }
+
+    public function updatingPerPage()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
 }

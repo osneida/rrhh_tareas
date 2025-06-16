@@ -194,16 +194,6 @@ class ClienteLivewire extends Component
         $this->showCliente = null;
     }
 
-    public function updatingPerPage()
-    {
-        $this->resetPage();
-    }
-
-    public function updatingSearch()
-    {
-        $this->resetPage();
-    }
-
     public function updatingfiltroEstatus()
     {
         $this->resetPage();

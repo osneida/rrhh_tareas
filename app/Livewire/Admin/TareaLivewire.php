@@ -146,8 +146,6 @@ class TareaLivewire extends Component
         $this->deleteMode = false;
     }
 
-
-
     public function update()
     {
         try {
@@ -190,16 +188,6 @@ class TareaLivewire extends Component
     private function reglasTarea($tarea_id = null)
     {
         return (new TareaRequest())->rules($tarea_id);
-    }
-
-    public function updatingPerPage()
-    {
-        $this->resetPage();
-    }
-
-    public function updatingSearch()
-    {
-        $this->resetPage();
     }
 
     public function exportExcel()

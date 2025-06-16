@@ -56,7 +56,7 @@
                      <flux:navlist.item icon="clock" :href="route('jornada-laboral.index')"
                         :current="request()->routeIs('jornada-laboral.index')" wire:navigate>{{ __('Working day') }}
                     </flux:navlist.item>
-                    <flux:navlist.item icon="bars-2" :href="route('horas-trabajadas.index')"
+                    <flux:navlist.item icon="arrow-right" :href="route('horas-trabajadas.index')"
                         :current="request()->routeIs('horas-trabajadas.index')" wire:navigate>{{ __('Summary of hours') }}
                     </flux:navlist.item>
                 </flux:navlist.group>
