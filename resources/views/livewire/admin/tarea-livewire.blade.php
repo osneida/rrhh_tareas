@@ -193,7 +193,7 @@
                     </h2>
 
                     <div class="mb-3">
-                        <flux:textarea readonly wire:model="tarea" rows="2" maxlength="255"
+                        <flux:textarea readonly wire:model="tarea" rows="4" maxlength="255"
                             label="{{ __('Task') }}" />
 
                     </div>
@@ -239,7 +239,7 @@
                 @if (!$showTarea)
                     <form wire:submit.prevent="{{ $editMode ? 'update' : 'store' }}">
                         <div class="mb-3">
-                            <flux:textarea autofocus wire:model="tarea" rows="2" maxlength="255"
+                            <flux:textarea autofocus wire:model="tarea" rows="4" maxlength="255"
                                 label="{{ __('Task') }}" placeholder="{{ __('Task Description') }}" />
                         </div>
                         <div class="mb-3">
@@ -303,7 +303,7 @@
                             <button type="submit"
                                 class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">{{ __('Save') }}
                             </button>
-                            <button type="button" wire:click="closeModalGrupo"
+                            <button type="button" wire:click="closeModal"
                                 class="px-4 py-2 bg-zinc-500 text-white rounded hover:bg-zinc-600">{{ __('Back') }}</button>
                         </div>
                     </form>

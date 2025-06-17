@@ -20,9 +20,9 @@ jobs:
         image: mysql:8.0
         env:
           MYSQL_DATABASE: rrhh_testing
-          MYSQL_USER: osneidab
-          MYSQL_PASSWORD: 12345678
-          MYSQL_ROOT_PASSWORD: root
+          MYSQL_USER: "${{ secrets.MYSQL_USER }}"
+          MYSQL_PASSWORD: "${{ secrets.MYSQL_PASSWORD }}"
+          MYSQL_ROOT_PASSWORD: "${{ secrets.MYSQL_ROOT_PASSWORD }}"
         ports:
           - 3306:3306
         options: >-

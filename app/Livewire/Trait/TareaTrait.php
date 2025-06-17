@@ -18,6 +18,7 @@ trait TareaTrait
         $this->horas = $tarea->horas;
         $this->cliente_id = $tarea->cliente_id;
         $this->user_id = $tarea->user_id;
+
         if (method_exists($this, 'closeModal')) {
 
             $this->showModal = true;
