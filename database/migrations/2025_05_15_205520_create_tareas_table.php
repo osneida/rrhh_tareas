@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\EstatusTareaEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,7 +15,7 @@ return new class extends Migration
         Schema::create('tareas', function (Blueprint $table) {
             $table->id();
             $table->string('tarea');
-            $table->string('estatus')->default('Pendiente');
+            $table->string('estatus')->default(EstatusTareaEnum::Pendiente->value);
             $table->date('fecha');
             $table->integer('horas')->default(1);
             $table->string('observacion')->nullable();

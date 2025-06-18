@@ -21,7 +21,7 @@ class TareaLivewire extends Component
 {
     use WithPagination, TareaTrait, FuncionesTrait;
 
-    public $tareas, $tarea, $tarea_id;
+    public $tarea, $tarea_id, $tareaTest;
     public $estatus, $fecha, $horas = 1, $user_id, $cliente_id, $observacion;
 
     //  PROPIEDADES PARA FILTROS Y ORDEN
@@ -114,8 +114,9 @@ class TareaLivewire extends Component
         $this->validate($this->reglasTarea());
         $userIds = is_array($this->user_id) ? $this->user_id : [$this->user_id];
 
+        //la variable $tareaTest la uso para obtener el id de la tarea creada en TareaTest
         foreach ($userIds as $uid) {
-            Tarea::create([
+           $this->tareaTest   = Tarea::create([
                 'tarea'       => $this->tarea,
                 'fecha'       => $this->fecha,
                 'horas'       => $this->horas,

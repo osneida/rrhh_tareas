@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\EstatusTareaEnum;
 use Illuminate\Foundation\Http\FormRequest;
 
 class TareaRequest extends FormRequest
@@ -13,12 +14,13 @@ class TareaRequest extends FormRequest
 
     public function rules($tarea_id = null): array
     {
+        $estatusValues = implode(',', array_column(EstatusTareaEnum::cases(), 'value'));
         $rules = [
             'tarea'      => 'required|string|min:3|max:255',
             'cliente_id' => 'required|exists:clientes,id',
             'horas'      => 'required|numeric|min:1|max:10',
             'user_id'    => 'nullable|exists:users,id',
-            'estatus'    => 'nullable|string|in:Pendiente,Iniciada,Completada',
+            'estatus'    => 'nullable|string|in:'.$estatusValues, //Pendiente,Iniciada,Completada
         ];
 
         // Si es creación (no hay id), la fecha debe ser mayor o igual a hoy
@@ -31,4 +33,6 @@ class TareaRequest extends FormRequest
 
         return $rules;
     }
+
+
 }
