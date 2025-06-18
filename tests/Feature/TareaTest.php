@@ -15,6 +15,16 @@ class TareaTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
+    protected $cliente, $user;
+
+    protected function setUp(): void
+    {
+        //para crearlo de forma global
+        parent::setUp();
+        $this->cliente = Cliente::factory()->create();
+        $this->user = User::factory()->create();
+    }
+
     public function test_status(): void
     {
         $response = $this->get('/');
@@ -23,42 +33,37 @@ class TareaTest extends TestCase
 
     public function test_can_create_tarea_with_livewire()
     {
-        $user = User::factory()->create();
-        $cliente = Cliente::factory()->create();
-
-        $this->actingAs($user);
+        $this->actingAs($this->user);  //para que el usuario sea autenticado
 
         Livewire::test(TareaLivewire::class)
             ->set('tarea', 'Nueva tarea')
             ->set('estatus', 'Pendiente')
             ->set('fecha', now()->addDay()->toDateString())
             ->set('horas', 2)
-            ->set('user_id', $user->id)
-            ->set('cliente_id', $cliente->id)
+            ->set('user_id', $this->user->id)
+            ->set('cliente_id', $this->cliente->id)
             ->set('observacion', 'Observación de prueba')
             ->call('store');
 
         $this->assertDatabaseHas('tareas', [
             'tarea' => 'Nueva tarea',
-            'user_id' => $user->id,
-            'cliente_id' => $cliente->id,
+            'user_id' => $this->user->id,
+            'cliente_id' => $this->cliente->id,
         ]);
     }
 
     public function test_tarea_min_length_livewire()
     {
-        $user = User::factory()->create();
-        $cliente = Cliente::factory()->create();
 
-        $this->actingAs($user);
+        $this->actingAs($this->user);
 
         Livewire::test(TareaLivewire::class)
             ->set('tarea', 'ab')
             ->set('estatus', 'Pendiente')
             ->set('fecha', now()->addDay()->toDateString())
             ->set('horas', 2)
-            ->set('user_id', $user->id)
-            ->set('cliente_id', $cliente->id)
+            ->set('user_id', $this->user->id)
+            ->set('cliente_id', $this->cliente->id)
             ->set('observacion', 'Prueba min length')
             ->call('store')
             ->assertHasErrors(['tarea' => 'min']);
@@ -66,34 +71,29 @@ class TareaTest extends TestCase
 
     public function test_tarea_exact_min_length_livewire()
     {
-        $user = User::factory()->create();
-        $cliente = Cliente::factory()->create();
 
-        $this->actingAs($user);
+        $this->actingAs($this->user);
 
         Livewire::test(TareaLivewire::class)
             ->set('tarea', 'abc')
             ->set('estatus', 'Pendiente')
             ->set('fecha', now()->addDay()->toDateString())
             ->set('horas', 2)
-            ->set('user_id', $user->id)
-            ->set('cliente_id', $cliente->id)
+            ->set('user_id', $this->user->id)
+            ->set('cliente_id', $this->cliente->id)
             ->set('observacion', 'Prueba exact min length')
             ->call('store');
 
         $this->assertDatabaseHas('tareas', [
             'tarea' => 'abc',
-            'user_id' => $user->id,
-            'cliente_id' => $cliente->id,
+            'user_id' => $this->user->id,
+            'cliente_id' => $this->cliente->id,
         ]);
     }
 
     public function test_tarea_max_length_livewire()
     {
-        $user = User::factory()->create();
-        $cliente = Cliente::factory()->create();
-
-        $this->actingAs($user);
+        $this->actingAs($this->user);
 
         $tareaStr = str_repeat('a', 255);
 
@@ -102,24 +102,21 @@ class TareaTest extends TestCase
             ->set('estatus', 'Pendiente')
             ->set('fecha', now()->addDay()->toDateString())
             ->set('horas', 2)
-            ->set('user_id', $user->id)
-            ->set('cliente_id', $cliente->id)
+            ->set('user_id', $this->user->id)
+            ->set('cliente_id', $this->cliente->id)
             ->set('observacion', 'Prueba max length')
             ->call('store');
 
         $this->assertDatabaseHas('tareas', [
             'tarea' => $tareaStr,
-            'user_id' => $user->id,
-            'cliente_id' => $cliente->id,
+            'user_id' => $this->user->id,
+            'cliente_id' => $this->cliente->id,
         ]);
     }
 
     public function test_tarea_above_max_length_livewire()
     {
-        $user = User::factory()->create();
-        $cliente = Cliente::factory()->create();
-
-        $this->actingAs($user);
+        $this->actingAs($this->user);
 
         $tareaStr = str_repeat('a', 256);
 
@@ -128,8 +125,8 @@ class TareaTest extends TestCase
             ->set('estatus', 'Pendiente')
             ->set('fecha', now()->addDay()->toDateString())
             ->set('horas', 2)
-            ->set('user_id', $user->id)
-            ->set('cliente_id', $cliente->id)
+            ->set('user_id', $this->user->id)
+            ->set('cliente_id', $this->cliente->id)
             ->set('observacion', 'Prueba above max length')
             ->call('store')
             ->assertHasErrors(['tarea' => 'max']);
@@ -137,17 +134,14 @@ class TareaTest extends TestCase
 
     public function test_delete_tarea()
     {
-        $user = User::factory()->create();
-        $cliente = Cliente::factory()->create();
-
-        $this->actingAs($user);
+        $this->actingAs($this->user);
 
         $tareaComponent = Livewire::test(TareaLivewire::class)
             ->set('tarea', 'Tarea a eliminar')
             ->set('fecha', now()->addDay()->toDateString())
             ->set('horas', 2)
-            ->set('user_id', $user->id)
-            ->set('cliente_id', $cliente->id)
+            ->set('user_id', $this->user->id)
+            ->set('cliente_id', $this->cliente->id)
             ->set('observacion', 'Observación para eliminar')
             ->call('store');
 
@@ -169,18 +163,15 @@ class TareaTest extends TestCase
 
     public function test_no_se_puede_borrar_tarea_con_jornada_laboral()
     {
-        $user = User::factory()->create();
-        $cliente = Cliente::factory()->create();
-
-        $this->actingAs($user);
+        $this->actingAs($this->user);
 
         // Crear la tarea
         $tareaComponent = Livewire::test(TareaLivewire::class)
             ->set('tarea', 'Tarea protegida')
             ->set('fecha', now()->addDay()->toDateString())
             ->set('horas', 2)
-            ->set('user_id', $user->id)
-            ->set('cliente_id', $cliente->id)
+            ->set('user_id', $this->user->id)
+            ->set('cliente_id', $this->cliente->id)
             ->set('observacion', 'No debe poder eliminarse')
             ->call('store');
 
@@ -211,17 +202,17 @@ class TareaTest extends TestCase
 
     public function test_crear_tarea_para_varios_usuarios()
     {
-        $cliente = Cliente::factory()->create();
         $user    = User::factory()->count(3)->create(); // Crear 3 usuarios
         $userIds = $user->pluck('id')->toArray(); // Array de IDs
+        $this->actingAs($this->user);
 
         Livewire::test(TareaLivewire::class)
             ->set('tarea', 'Tarea para varios usuarios')
             ->set('estatus', 'Pendiente')
             ->set('fecha', now()->addDay()->toDateString())
             ->set('horas', 2)
-            ->set('user_id', $userIds)
-            ->set('cliente_id', $cliente->id)
+            ->set('user_id',  $userIds)
+            ->set('cliente_id', $this->cliente->id)
             ->set('observacion', 'varios empleados')
             ->call('store');
 
@@ -232,7 +223,7 @@ class TareaTest extends TestCase
                 'estatus' => 'Pendiente',
                 'fecha' => now()->addDay()->toDateString(),
                 'horas' => 2,
-                'cliente_id' => $cliente->id,
+                'cliente_id' => $this->cliente->id,
                 'user_id' => $usuario->id,
             ]);
         }
@@ -240,65 +231,99 @@ class TareaTest extends TestCase
 
     public function test_crear_tarea_sin_usuarios()
     {
-        $cliente = Cliente::factory()->create();
+        $this->actingAs($this->user);
 
         Livewire::test(TareaLivewire::class)
             ->set('tarea', 'Tarea sin usuario o empleado')
             ->set('estatus', 'Pendiente')
             ->set('fecha', now()->addDay()->toDateString())
             ->set('horas', 2)
-            ->set('cliente_id', $cliente->id)
+            ->set('cliente_id', $this->cliente->id)
             ->set('observacion', 'varios empleados')
             ->call('store');
 
         // Verificar que se hayan creado tantas tareas como usuarios
         $this->assertDatabaseHas('tareas', [
             'tarea' => 'Tarea sin usuario o empleado',
-            'cliente_id' => $cliente->id,
+            'cliente_id' => $this->cliente->id,
         ]);
     }
 
     public function test_no_crear_tarea_con_fecha_pasada()
     {
-        $cliente = Cliente::factory()->create();
+        $this->actingAs($this->user);
 
         Livewire::test(TareaLivewire::class)
             ->set('tarea', 'Fecha en el pasado')
             ->set('fecha', now()->subDay()) // Fecha en el pasado
             ->set('horas', 2)
-            ->set('cliente_id', $cliente->id)
+            ->set('cliente_id', $this->cliente->id)
             ->call('store')
             ->assertHasErrors(['fecha' => 'after_or_equal:today']);
     }
 
+    public function test_update_tarea_con_fecha_pasada()
+    {
+        $this->actingAs($this->user);
+
+        // Crear la tarea
+        $tareaComponent = Livewire::test(TareaLivewire::class)
+            ->set('tarea', 'Update Tarea cualquier fecha')
+            ->set('fecha', now()->addDay()->toDateString())
+            ->set('horas', 2)
+            ->set('estatus', 'Pendiente')
+            ->set('cliente_id', $this->cliente->id)
+            ->call('store');
+
+        $tareaId = $tareaComponent->get('tareaTest')->id;
+
+        $fechaPasada = now()->subDay()->toDateString();
+
+        Livewire::test(TareaLivewire::class, ['tarea_id' => $tareaId])
+            ->set('tarea', 'Update Tarea cualquier fecha')
+            ->set('fecha', $fechaPasada) // Fecha en el pasado
+            ->set('horas', 2)
+            ->set('estatus', 'Pendiente')
+            ->set('cliente_id', $this->cliente->id)
+            ->call('update');
+
+        // Aserción: la fecha se actualizó correctamente
+        $this->assertDatabaseHas('tareas', [
+            'id' => $tareaId,
+            'fecha' => $fechaPasada,
+        ]);
+    }
+
     public function test_no_crear_tarea_con_hora_fuera_rango_max()
     {
-        $cliente = Cliente::factory()->create();
+        $this->actingAs($this->user);
 
         Livewire::test(TareaLivewire::class)
             ->set('tarea', 'Hora permitida 1 a 10')
             ->set('fecha', now()->addDay()->toDateString())
             ->set('horas', 12)
-            ->set('cliente_id', $cliente->id)
+            ->set('cliente_id', $this->cliente->id)
             ->call('store')
             ->assertHasErrors(['horas' => 'max']);
     }
 
     public function test_no_crear_tarea_con_hora_fuera_rango_min()
     {
-        $cliente = Cliente::factory()->create();
+        $this->actingAs($this->user);
 
         Livewire::test(TareaLivewire::class)
             ->set('tarea', 'Hora permitida 1 a 10')
             ->set('fecha', now()->addDay()->toDateString())
             ->set('horas', 0)
-            ->set('cliente_id', $cliente->id)
+            ->set('cliente_id', $this->cliente->id)
             ->call('store')
             ->assertHasErrors(['horas' => 'min']);
     }
 
     public function test_no_crear_tarea_cliente_no_existe()
     {
+        $this->actingAs($this->user);
+
         Livewire::test(TareaLivewire::class)
             ->set('tarea', 'Cliente no existe')
             ->set('fecha', now()->addDay()->toDateString())
@@ -310,15 +335,65 @@ class TareaTest extends TestCase
 
     public function test_no_crear_tarea_user_no_existe()
     {
-        $cliente = Cliente::factory()->create();
+        $this->actingAs($this->user);
 
         Livewire::test(TareaLivewire::class)
             ->set('tarea', 'Cliente no existe')
             ->set('fecha', now()->addDay()->toDateString())
             ->set('horas', 1)
             ->set('user_id', 120000000)
-            ->set('cliente_id', $cliente->id)
+            ->set('cliente_id', $this->cliente->id)
             ->call('store')
             ->assertHasErrors(['user_id' => 'exists:users,id']);
+    }
+
+    public function test_no_crear_tarea_requerida()
+    {
+        $this->actingAs($this->user);
+
+        Livewire::test(TareaLivewire::class)
+            ->set('tarea', '')
+            ->set('fecha', now()->addDay()->toDateString())
+            ->set('horas', 1)
+            ->set('cliente_id', $this->cliente->id)
+            ->call('store')
+            ->assertHasErrors(['tarea' => 'required']);
+    }
+
+    public function test_no_crear_fecha_requerida()
+    {
+        $this->actingAs($this->user);
+
+        Livewire::test(TareaLivewire::class)
+            ->set('tarea', 'La fecha es requerida')
+            ->set('horas', 1)
+            ->set('cliente_id', $this->cliente->id)
+            ->call('store')
+            ->assertHasErrors(['fecha' => 'required']);
+    }
+
+    public function test_no_crear_horas_requeridas()
+    {
+        $this->actingAs($this->user);
+
+        Livewire::test(TareaLivewire::class)
+            ->set('tarea', 'La hora es requerida')
+            ->set('fecha', now()->addDay()->toDateString())
+            ->set('horas', '')
+            ->set('cliente_id', $this->cliente->id)
+            ->call('store')
+            ->assertHasErrors(['horas' => 'required']);
+    }
+
+    public function test_no_crear_cliente_requerido()
+    {
+        $this->actingAs($this->user);
+
+        Livewire::test(TareaLivewire::class)
+            ->set('tarea', 'La hora es requerida')
+            ->set('fecha', now()->addDay()->toDateString())
+            ->set('horas', 1)
+            ->call('store')
+            ->assertHasErrors(['cliente_id' => 'required']);
     }
 }

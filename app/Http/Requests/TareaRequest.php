@@ -34,5 +34,4 @@ class TareaRequest extends FormRequest
         return $rules;
     }
 
-
 }
