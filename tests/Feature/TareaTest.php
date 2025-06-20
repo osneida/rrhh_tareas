@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\EstatusTareaEnum;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -37,7 +38,7 @@ class TareaTest extends TestCase
 
         Livewire::test(TareaLivewire::class)
             ->set('tarea', 'Nueva tarea')
-            ->set('estatus', 'Pendiente')
+            ->set('estatus', EstatusTareaEnum::Pendiente)
             ->set('fecha', now()->addDay()->toDateString())
             ->set('horas', 2)
             ->set('user_id', $this->user->id)
@@ -59,7 +60,7 @@ class TareaTest extends TestCase
 
         Livewire::test(TareaLivewire::class)
             ->set('tarea', 'ab')
-            ->set('estatus', 'Pendiente')
+            ->set('estatus', EstatusTareaEnum::Pendiente)
             ->set('fecha', now()->addDay()->toDateString())
             ->set('horas', 2)
             ->set('user_id', $this->user->id)
@@ -76,7 +77,7 @@ class TareaTest extends TestCase
 
         Livewire::test(TareaLivewire::class)
             ->set('tarea', 'abc')
-            ->set('estatus', 'Pendiente')
+            ->set('estatus', EstatusTareaEnum::Pendiente)
             ->set('fecha', now()->addDay()->toDateString())
             ->set('horas', 2)
             ->set('user_id', $this->user->id)
@@ -99,7 +100,7 @@ class TareaTest extends TestCase
 
         Livewire::test(TareaLivewire::class)
             ->set('tarea', $tareaStr)
-            ->set('estatus', 'Pendiente')
+            ->set('estatus', EstatusTareaEnum::Finalizada)
             ->set('fecha', now()->addDay()->toDateString())
             ->set('horas', 2)
             ->set('user_id', $this->user->id)
@@ -122,7 +123,7 @@ class TareaTest extends TestCase
 
         Livewire::test(TareaLivewire::class)
             ->set('tarea', $tareaStr)
-            ->set('estatus', 'Pendiente')
+            ->set('estatus', EstatusTareaEnum::Iniciada)
             ->set('fecha', now()->addDay()->toDateString())
             ->set('horas', 2)
             ->set('user_id', $this->user->id)
@@ -208,7 +209,7 @@ class TareaTest extends TestCase
 
         Livewire::test(TareaLivewire::class)
             ->set('tarea', 'Tarea para varios usuarios')
-            ->set('estatus', 'Pendiente')
+            ->set('estatus', EstatusTareaEnum::Pendiente)
             ->set('fecha', now()->addDay()->toDateString())
             ->set('horas', 2)
             ->set('user_id',  $userIds)
@@ -220,7 +221,7 @@ class TareaTest extends TestCase
         foreach ($user as $usuario) {
             $this->assertDatabaseHas('tareas', [
                 'tarea' => 'Tarea para varios usuarios',
-                'estatus' => 'Pendiente',
+                'estatus' => EstatusTareaEnum::Pendiente,
                 'fecha' => now()->addDay()->toDateString(),
                 'horas' => 2,
                 'cliente_id' => $this->cliente->id,
@@ -235,7 +236,7 @@ class TareaTest extends TestCase
 
         Livewire::test(TareaLivewire::class)
             ->set('tarea', 'Tarea sin usuario o empleado')
-            ->set('estatus', 'Pendiente')
+            ->set('estatus', EstatusTareaEnum::Pendiente)
             ->set('fecha', now()->addDay()->toDateString())
             ->set('horas', 2)
             ->set('cliente_id', $this->cliente->id)
@@ -271,7 +272,7 @@ class TareaTest extends TestCase
             ->set('tarea', 'Update Tarea cualquier fecha')
             ->set('fecha', now()->addDay()->toDateString())
             ->set('horas', 2)
-            ->set('estatus', 'Pendiente')
+            ->set('estatus', EstatusTareaEnum::Pendiente)
             ->set('cliente_id', $this->cliente->id)
             ->call('store');
 
@@ -283,7 +284,7 @@ class TareaTest extends TestCase
             ->set('tarea', 'Update Tarea cualquier fecha')
             ->set('fecha', $fechaPasada) // Fecha en el pasado
             ->set('horas', 2)
-            ->set('estatus', 'Pendiente')
+            ->set('estatus', EstatusTareaEnum::Pendiente)
             ->set('cliente_id', $this->cliente->id)
             ->call('update');
 
@@ -395,5 +396,113 @@ class TareaTest extends TestCase
             ->set('horas', 1)
             ->call('store')
             ->assertHasErrors(['cliente_id' => 'required']);
+    }
+
+    public function test_only_admin_can_crear_tarea()
+    {
+        $userEmpleado = User::factory()->create(['role' => 'empleado']);
+
+        // User cannot create
+        $this->actingAs($userEmpleado);
+        Livewire::test(TareaLivewire::class)
+            ->set('tarea', 'user no admin')
+            ->set('fecha', now()->addDay()->toDateString())
+            ->set('horas', 2)
+            ->set('estatus', EstatusTareaEnum::Pendiente)
+            ->set('cliente_id', $this->cliente->id)
+            ->call('store')
+            ->assertForbidden();
+    }
+
+    public function test_only_admin_can_update_tarea()
+    {
+        $userEmpleado = User::factory()->create(['role' => 'empleado']);
+
+        // Admin can update
+        $this->actingAs($this->user);
+        $tareaComponent = Livewire::test(TareaLivewire::class)
+            ->set('tarea', 'user admin')
+            ->set('fecha', now()->addDay()->toDateString())
+            ->set('horas', 2)
+            ->set('estatus', EstatusTareaEnum::Pendiente)
+            ->set('cliente_id', $this->cliente->id)
+            ->call('store');
+
+        $tareaId = $tareaComponent->get('tareaTest')->id;
+
+        $this->assertDatabaseHas('tareas', [
+            'id' => $tareaId
+        ]);
+
+
+        Livewire::test(TareaLivewire::class, ['tarea_id' => $tareaId])
+            ->set('tarea', 'Update Tarea cualquier')
+            ->set('fecha', now()->addDay()->toDateString())
+            ->set('horas', 2)
+            ->set('estatus', EstatusTareaEnum::Pendiente)
+            ->set('cliente_id', $this->cliente->id)
+            ->call('update');
+
+        $this->assertDatabaseHas('tareas', [
+            'id'    => $tareaId,
+            'tarea' => 'Update Tarea cualquier',
+        ]);
+
+        // userEmpleado cannot update
+        $this->actingAs($userEmpleado);
+        Livewire::test(TareaLivewire::class, ['tarea_id' => $tareaId])
+            ->set('tarea', 'Update Tarea cualquier')
+            ->set('fecha', now()->addDay()->toDateString())
+            ->set('horas', 2)
+            ->set('estatus', EstatusTareaEnum::Pendiente)
+            ->set('cliente_id', $this->cliente->id)
+            ->call('update')
+            ->assertForbidden();
+    }
+
+    public function test_only_admin_can_delete_tarea()
+    {
+        $userEmpleado = User::factory()->create(['role' => 'user']);
+
+        // Admin can delete if no tareas
+        $this->actingAs($this->user);
+        $tareaComponent = Livewire::test(TareaLivewire::class)
+            ->set('tarea', 'user admin')
+            ->set('fecha', now()->addDay()->toDateString())
+            ->set('horas', 2)
+            ->set('estatus', EstatusTareaEnum::Pendiente)
+            ->set('cliente_id', $this->cliente->id)
+            ->call('store');
+
+        $tareaId = $tareaComponent->get('tareaTest')->id;
+
+        $this->assertDatabaseHas('tareas', [
+            'id' => $tareaId
+        ]);
+
+        Livewire::test(TareaLivewire::class, ['tarea_id' => $tareaId])
+            ->call('destroy');
+
+        $this->assertDatabaseMissing('tareas', ['id' => $tareaId]);
+
+        // User empleado cannot delete
+        $tareaComponent = Livewire::test(TareaLivewire::class)
+            ->set('tarea', 'user empleado')
+            ->set('fecha', now()->addDay()->toDateString())
+            ->set('horas', 2)
+            ->set('estatus', EstatusTareaEnum::Pendiente)
+            ->set('cliente_id', $this->cliente->id)
+            ->call('store');
+
+        $tareaId = $tareaComponent->get('tareaTest')->id;
+
+        $this->assertDatabaseHas('tareas', [
+            'id' => $tareaId
+        ]);
+
+        $this->actingAs($userEmpleado);
+        Livewire::test(TareaLivewire::class, ['tarea_id' => $tareaId])
+            ->call('destroy')
+            ->assertForbidden();
     }
 }

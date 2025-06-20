@@ -33,10 +33,14 @@ trait TareaTrait
         }
     }
 
-    public function destroy($id)
+    public function destroy($id=null)
     {
+        if (!$this->isAdmin) {
+            abort(403);
+        }
+
         try {
-            $tarea = Tarea::findOrFail($id);
+            $tarea = Tarea::findOrFail($this->tarea_id);
             $tarea->delete();
 
             if (method_exists($this, 'closeModal')) {

@@ -111,12 +111,16 @@ class TareaLivewire extends Component
 
     public function store()
     {
+        if (!$this->isAdmin) {
+            abort(403);
+        }
+
         $this->validate($this->reglasTarea());
         $userIds = is_array($this->user_id) ? $this->user_id : [$this->user_id];
 
         //la variable $tareaTest la uso para obtener el id de la tarea creada en TareaTest
         foreach ($userIds as $uid) {
-           $this->tareaTest   = Tarea::create([
+            $this->tareaTest  = Tarea::create([
                 'tarea'       => $this->tarea,
                 'fecha'       => $this->fecha,
                 'horas'       => $this->horas,
@@ -149,6 +153,10 @@ class TareaLivewire extends Component
 
     public function update()
     {
+        if (!$this->isAdmin) {
+            abort(403);
+        }
+
         try {
             $this->validate($this->reglasTarea($this->tarea_id));
             $tarea = Tarea::findOrFail($this->tarea_id);
@@ -158,7 +166,7 @@ class TareaLivewire extends Component
                 'estatus'    => $this->estatus,
                 'fecha'      => $this->fecha,
                 'horas'      => $this->horas,
-                'observacion'=> $this->observacion,
+                'observacion' => $this->observacion,
                 'cliente_id' => $this->cliente_id,
                 'user_id'    => $this->user_id ?: null, // Si está vacío, lo pone en null
             ]);
@@ -175,9 +183,9 @@ class TareaLivewire extends Component
     public function confirmDelete($id)
     {
         $this->show($id);
+        $this->tarea_id = $id;
         $this->deleteMode = true; // Activar modo eliminar
     }
-
 
     public function closeModal()
     {

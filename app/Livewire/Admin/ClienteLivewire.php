@@ -88,6 +88,10 @@ class ClienteLivewire extends Component
 
     public function store()
     {
+        if (!$this->isAdmin) {
+            abort(403);
+        }
+
         $this->validate($this->reglasCliente());
 
         Cliente::create([
@@ -113,7 +117,7 @@ class ClienteLivewire extends Component
         $this->cif = $cliente->cif;
         $this->mail = $cliente->mail;
         $this->phone = $cliente->phone;
-        $this->status = $cliente->status ? 'Activo' : 'Inactivo';
+        $this->status = $cliente->status;
 
         $this->showModal = true;
         $this->editMode = true;
@@ -122,6 +126,10 @@ class ClienteLivewire extends Component
 
     public function update()
     {
+        if (!$this->isAdmin) {
+            abort(403);
+        }
+
         try {
 
             $cliente = Cliente::findOrFail($this->cliente_id);
@@ -147,6 +155,9 @@ class ClienteLivewire extends Component
 
     public function cambiar_status(Cliente $cliente)
     {
+        if (!$this->isAdmin) {
+            abort(403);
+        }
 
         $cliente->status = !$cliente->status;
         $cliente->save();
@@ -157,13 +168,19 @@ class ClienteLivewire extends Component
     public function confirmDelete($id)
     {
         $this->show($id);
+        $this->cliente_id = $id;
         $this->deleteMode = true; // Activar modo eliminar
     }
 
-    public function destroy($id)
+    public function destroy($id=null)
     {
+        if (!$this->isAdmin) {
+            abort(403);
+        }
+
         try {
-            $cliente = Cliente::findOrFail($id);
+
+            $cliente = Cliente::findOrFail($this->cliente_id);
 
             if ($cliente->tareas()->count() > 0) {
                 $this->closeModal();
