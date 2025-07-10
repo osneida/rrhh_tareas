@@ -1,6 +1,6 @@
 # RRHH Tareas
 
-![Captura de la aplicación](public/rrhh.jpg)
+![Captura de la aplicación](public/sib.jpg)
 
 Aplicación desarrollada con **Laravel 12** y **Livewire** para la gestión de tareas, empleados y clientes. Permite asignar tareas, calcular sueldos según horas trabajadas y soporta múltiples idiomas.
 
