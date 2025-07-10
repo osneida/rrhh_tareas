@@ -34,6 +34,7 @@ class TareaLivewire extends Component
     public $deleteMode = false;
     public $allEmpleados = [];
     public $allClientes = [];
+    public $head = [];
 
     public $selectStatus;
     public $selectEstatusTarea;
@@ -47,6 +48,16 @@ class TareaLivewire extends Component
         $this->paginacion = PaginacionEnum::cases();
         $this->perPage = PaginacionEnum::Diez->value; // Default pagination value
         $this->selectEstatusTarea = EstatusTareaEnum::cases();
+
+        $this->head = [
+            'id' => __('#'),
+            'tarea' => __('Task'),
+            'estatus' => __('Status'),
+            'fecha' => __('Date'),
+            'horas' => __('Hours'),
+            'user_name' => __('Employee'),
+            'cliente_name' => __('Client')
+        ];
     }
 
     private function buildQuery()
