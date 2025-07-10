@@ -28,12 +28,16 @@ class GrupoTareaLivewire extends Component
     public $filtroEstatus = '';
     public $filtroEmpleado = '';
 
+    public $ordenCampoTarea = 'id';
+    public $ordenDireccionTarea = 'desc';
+
     public $selectEstatusTarea;
     public $allEmpleados = [];
     public $tareasEmpleados = [];
     public $allClientes = [];
     public $losDias;
     public $dias = [];
+    public $head = [];
 
     public $editMode   = false;
     public $createMode = false;
@@ -82,13 +86,13 @@ class GrupoTareaLivewire extends Component
                 ->when($this->filtroEmpleado, function ($query) {
                     $query->where('user_id', $this->filtroEmpleado);
                 })
-                ->when($this->ordenCampo === 'user_name', function ($query) {
+                ->when($this->ordenCampoTarea === 'user_name', function ($query) {
                     $query->join('users', 'tareas.user_id', '=', 'users.id')
                         ->select('tareas.*')
-                        ->orderBy('users.name', $this->ordenDireccion);
+                        ->orderBy('users.name', $this->ordenDireccionTarea);
                 })
-                ->when($this->ordenCampo !== 'user_name', function ($query) {
-                    $query->orderBy($this->ordenCampo, $this->ordenDireccion);
+                ->when($this->ordenCampoTarea !== 'user_name', function ($query) {
+                    $query->orderBy($this->ordenCampoTarea, $this->ordenDireccionTarea);
                 })
                 ->paginate(10)
                 : null;
@@ -116,6 +120,15 @@ class GrupoTareaLivewire extends Component
         $this->losDias = DiasEnum::cases();
         $this->perPage = PaginacionEnum::Diez->value; // Default pagination value
         $this->paginacion = PaginacionEnum::cases();
+
+        $this->head = [
+            'id' => __('#'),
+            'tarea' => __('Task'),
+            'estatus' => __('Status'),
+            'fecha' => __('Date'),
+            'horas' => __('Hours'),
+            'user_name' => __('Employee')
+        ];
     }
 
     public function create()
@@ -321,5 +334,17 @@ class GrupoTareaLivewire extends Component
     {
         $this->perPage = $value;
         $this->resetPage();
+    }
+
+
+    // MÉTODO PARA ORDENAR POR COLUMNA
+    public function ordenarPorTarea($campo)
+    {
+        if ($this->ordenCampoTarea === $campo) {
+            $this->ordenDireccionTarea = $this->ordenDireccionTarea === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->ordenCampoTarea = $campo;
+            $this->ordenDireccionTarea = 'asc';
+        }
     }
 }

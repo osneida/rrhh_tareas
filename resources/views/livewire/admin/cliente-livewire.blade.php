@@ -31,84 +31,24 @@
         <table class="min-w-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded shadow">
             <thead>
                 <tr class="bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200">
-                    <th class="text-left px-4 py-2 cursor-pointer" wire:click="ordenarPor('id')">
-                        @if ($ordenCampo === 'id')
-                            <span>
-                                @if ($ordenDireccion === 'asc')
-                                    ▲
-                                @else
-                                    ▼
+                   @foreach ($head as $field => $label)
+                            <th class="text-left px-4 py-2 cursor-pointer"
+                                wire:click="ordenarPor('{{ $field }}')">
+                                {{ $label }}
+                                @if ($ordenCampo === $field)
+                                    <span>
+                                        @if ($ordenDireccion === 'asc')
+                                            ▲
+                                        @else
+                                            ▼
+                                        @endif
+                                    </span>
                                 @endif
-                            </span>
-                        @endif#
-                    </th>
-                    <th class="text-left px-4 py-2 cursor-pointer" wire:click="ordenarPor('name')">
-                        @if ($ordenCampo === 'name')
-                            <span>
-                                @if ($ordenDireccion === 'asc')
-                                    ▲
-                                @else
-                                    ▼
-                                @endif
-                            </span>
-                        @endif{{ __('Client') }}
-                    </th>
-                    <th class="text-left px-4 py-2 cursor-pointer" wire:click="ordenarPor('address')">
-                        @if ($ordenCampo === 'address')
-                            <span>
-                                @if ($ordenDireccion === 'asc')
-                                    ▲
-                                @else
-                                    ▼
-                                @endif
-                            </span>
-                        @endif{{ __('address') }}
-                    </th>
-                    <th class="text-left px-4 py-2 cursor-pointer" wire:click="ordenarPor('cif')">
-                        @if ($ordenCampo === 'cif')
-                            <span>
-                                @if ($ordenDireccion === 'asc')
-                                    ▲
-                                @else
-                                    ▼
-                                @endif
-                            </span>
-                        @endif{{ __('cif') }}
-                    </th>
-                    <th class="text-left px-4 py-2 cursor-pointer" wire:click="ordenarPor('mail')">
-                        @if ($ordenCampo === 'mail')
-                            <span>
-                                @if ($ordenDireccion === 'asc')
-                                    ▲
-                                @else
-                                    ▼
-                                @endif
-                            </span>
-                        @endif{{ __('mail') }}
-                    </th>
-                    <th class="text-left px-4 py-2 cursor-pointer" wire:click="ordenarPor('phone')">
-                        @if ($ordenCampo === 'phone')
-                            <span>
-                                @if ($ordenDireccion === 'asc')
-                                    ▲
-                                @else
-                                    ▼
-                                @endif
-                            </span>
-                        @endif{{ __('phone') }}
-                    </th>
-                    <th class="text-left px-4 py-2 cursor-pointer" wire:click="ordenarPor('status')">
-                        @if ($ordenCampo === 'status')
-                            <span>
-                                @if ($ordenDireccion === 'asc')
-                                    ▲
-                                @else
-                                    ▼
-                                @endif
-                            </span>
-                        @endif {{ __('status') }}
-                    </th>
-                    <th>{{ __('Actions') }}</th>
+                            </th>
+                        @endforeach
+                        <th class="text-left px-4 py-2">{{ __('Actions') }}</th>
+
+
                 </tr>
             </thead>
             <tbody>

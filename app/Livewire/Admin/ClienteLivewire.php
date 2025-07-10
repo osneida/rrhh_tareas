@@ -19,6 +19,7 @@ class ClienteLivewire extends Component
     public $name, $address, $cif, $mail, $phone, $status, $cliente_id;
     public $filtroEstatus = '';
     public $showCliente;
+    public $head = [];
     public $showModal = false;
     public $editMode = false;
     public $deleteMode = false;
@@ -30,6 +31,15 @@ class ClienteLivewire extends Component
         $this->selectStatus = StatusEnum::cases();
         $this->paginacion = PaginacionEnum::cases();
         $this->perPage = PaginacionEnum::Diez->value; // Default pagination value
+        $this->head = [
+            'id' => __('#'),
+            'name' => __('Name'),
+            'address' => __('Address'),
+            'cif' => __('CIF'),
+            'mail' => __('Mail'),
+            'phone' => __('Phone'),
+            'status' => __('Status')
+        ];
     }
 
     public function render()
